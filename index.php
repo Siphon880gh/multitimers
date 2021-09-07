@@ -44,7 +44,7 @@
             <template>
                 <div data-uid="__uid__" class="time-tile timer" data-o data-init style="position:relative;">
                     <div class="section-header">Timer</div>
-                    <div class="title" contenteditable onblur="timers.updateTitle('__uid__', event)" onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");'>Title <span class="fa fa-edit"></span></div>
+                    <div class="timer-title" contenteditable>Title <span class="fa fa-edit"></span></div>
                     <button class="remove-timer" data-role="none" type="button" onclick="timers.remove('__uid__', event);"><span class="fa fa-close"></button>
                     <table>
                         <tbody>

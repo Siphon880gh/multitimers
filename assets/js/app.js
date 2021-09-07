@@ -1,19 +1,33 @@
 // Create one timer at start
 $(function() {
-    // Event listeners
-    // - Create new button
+    // Event listeners (evL)
+    // - evL: Create new button
     $("#create-new").livequery( (i, el)=>{
         $(el).on("click", ()=>{
             new Timer();
         })
     });
 
-    // - Update alarms, and don't let "Enter" mess up contenteditable layout
+    // - evL: Title editing update and visual logic of clearing the edit icon
+    // onblur=" onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");'
+    $(".timer-title").livequery( (i, el)=> {
+        $(el).on("blur", (event) => {
+            const uid = utility.getUIDfromEvent(event);
+            timers.updateTitle(uid, event)
+
+        }).on("click", (event)=>{
+            document.execCommand("", false, null); 
+            const $titleEl = $(event.target);
+            if($titleEl.find(".fa-edit").length) $titleEl.text("");
+        });
+
+    });
+
+    // - evL: Update alarms, and don't let "Enter" mess up contenteditable layout
     $(".timer .alarm-container .hh, .timer .alarm-container .mm, .timer .alarm-container .ss").livequery( (i, el)=> {
         $(el).on("blur", (event) => {
-            const uid = $(event.target).closest('[data-uid]').attr('data-uid');
-            debugger;
-            timers.update(uid, event);
+            const uid = utility.getUIDfromEvent(event);
+            timers.updateAlarm(uid, event);
 
         }).on("keydown", (event)=>{
             utility.cancelEnter(event)
@@ -35,6 +49,9 @@ const utility = {
             event.stopPropagation(); 
             event.preventDefault(); 
         }
+    },
+    getUIDfromEvent: (event)=> {
+        return $(event.target).closest('[data-uid]').attr('data-uid');
     }
 }
 
