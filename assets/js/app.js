@@ -117,7 +117,7 @@ window.timers = {
         let timer = this[uid];
         let $timer = $(`[data-uid="${uid}"]`);
 
-        let title = $timer.find(".title").text();
+        let title = $timer.find(".timer-title").text();
         title = title.length?title:"<Untitled>";
 
         timer.title = title;
