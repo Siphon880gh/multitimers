@@ -1,7 +1,58 @@
+// Create one timer at start
 $(function() {
     $("#create-new").click();
-    /* initNewTimeTiles() */;
 });
+
+// <button id="create-new" onclick='initNewTimeTiles();' style="font-size:1.17rem;">
+
+/**
+ * Utility for the other structures
+ */
+const utility = {
+    $layout: $("main")
+}
+
+/**
+ * Timer object gets pushed to timers array
+ * Variables current and goal are in seconds.
+ */
+class Timer {
+    constructor() {
+        const uid = Date.now();
+        const timer = {
+            uid,
+            label: "",
+            running: false,
+            current: 0,
+            goal: 0,
+            tapping: {
+                evenLabel: "",
+                oddLabel: "",
+                current: 0
+            }
+        }
+
+        window.timers[uid] = timer;
+    }
+}
+
+/**
+ * $Timer is DOM
+ */
+class $Timer {
+    constructor(uid) {
+        let template = $("template").html();
+        template = template.replace("__uid__", uid);
+        utility.$layout.append(template);
+    }
+}
+
+/**
+ * timers have methods and elements
+ */
+window.timers = {
+
+};
 
 var newStopWatch = function( $time ) {
     this.$time = $time;
@@ -17,15 +68,7 @@ var newStopWatch = function( $time ) {
     // Public methods
     // Start or resume
     this.start = function() {
-        // var $timeTile=$(event.target).closest(".time-tile");
         var $timeTile = this.$time;
-        if($timeTile.find(".hh").text()==="00" && 
-            $timeTile.find(".mm").text()==="00" && 
-            $timeTile.find(".ss").text()==="00") {
-                if(!confirm("Start countup without an alarm? You can set the alarm at anytime."))
-                    return;
-            }
-        
 
         startAt = startAt ? startAt : now();
         this.renderUpdate();
@@ -174,9 +217,10 @@ time = time % (60 * 60 * 1000);
 m = Math.floor( time / (60 * 1000) );
 time = time % (60 * 1000);
 s = Math.floor( time / 1000 );
-ms = time % 1000;
+// ms = time % 1000;
 
-newTime = pad(h, 2) + ':' + pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 3);
+// newTime = pad(h, 2) + ':' + pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 3);
+newTime = pad(h, 2) + ':' + pad(m, 2) + ':' + pad(s, 2);
 return newTime;
 }
 
@@ -206,27 +250,9 @@ function validate(event) {
         digits="00";
 
     $el.html(digits);
-
-    // if(entered.length!==2 || entered.indexOf("-")!==-1 || 
-    //     entered.indexOf("+")!==-1 || entered.indexOf(" ")!==-1 ||
-    //     isNaN(parseInt(entered)) )  {
-
-    //         $el.html("00");
-    //         var clss = $el.attr("class");
-    //         alert(`Error: Format is not correct. Setting "${clss}" field to 00.`);
-    // }
-    // if(entered.length!==2 || entered.indexOf("-")!==-1 || 
-    //     entered.indexOf("+")!==-1 || entered.indexOf(" ")!==-1 ||
-    //     isNaN(parseInt(entered)) )  {
-
-    //         $el.html("00");
-    //         var clss = $el.attr("class");
-    //         alert(`Error: Format is not correct. Setting "${clss}" field to 00.`);
-    // }
-}
+} // validate
 
 function replay(event) {
-    // var $timeTile = $(event.target).closest(".time-tile");
     var $timeTile = this.$time;
     $timeTile.find(".fa-backward").click();
     $timeTile.find(".fa-play").click();
@@ -260,14 +286,9 @@ function shorthandSetAlarm($alarmSetter) {
     secs = ( ((totalHrs - parseInt(totalHrs))*60) - parseInt((totalHrs - parseInt(totalHrs))*60) )*60;
     secs = parseInt(secs);
 
-    // if(totalHrs<1) secs = parseInt(totalHrs*60*60);
-    // else secs = parseInt( mins*60 % 60 );
-
     var $ss = $alarmSetter.find(".ss"),
         $mm = $alarmSetter.find(".mm"),
         $hh = $alarmSetter.find(".hh");
-
-    // debugger;
 
     $ss.text(secs<10?`0${secs}`:secs);
     $mm.text(mins<10?`0${mins}`:mins);
@@ -283,7 +304,6 @@ function removeThisTimer(event) {
 } // removeThisTimer
 
 function playPause(event) {
-    // debugger;
     $time = $(event.target).closest(".time-tile");
     var isPlayMode = $time.find(".fa-play").length>0; // play vs pause mode
     if(isPlayMode) {

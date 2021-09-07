@@ -32,7 +32,7 @@
             <main></main>
 
             <template>
-                <div class="time-tile" data-o data-init style="position:relative;">
+                <div data-id="__uid__" class="time-tile" data-o data-init style="position:relative;">
                     <h4 class="subtitle" contenteditable onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");' style="margin-bottom:5px;">Title <span class="fa fa-edit"></span></h4>
                     <button data-role="none" type="button" onclick="removeThisTimer(event);" style="position: absolute; top:5px; right:0;"><span class="fa fa-close"></button>
                 <table>
@@ -55,13 +55,12 @@
                 <!-- <div class="text-center" v>	 -->
 
                     <button class="play-timer" data-role="none" type="button" onclick="playPause(event);"><span class="fa fa-play"/></button>
-                    <button class="repeat-timer" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-undo"/></button>
+                    <button class="repeat-timer" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-backward"/></button>
                     <button class="loop" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
-                    <button data-role="none" type="button" onclick="here(event).reset();"><span class="fa fa-backward"/></button>
                     <hr/>
                     <div class="tap-counter-wrapper">
                         <span style="text-align:left; font-weight:550;">Tap Counter:</span><br/>
-                        <span class="fa fa-undo icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
+                        <span class="fa fa-backward icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
                         <span class="fa fa-edit icon" onclick='setTapCounterLabels(event)'></span>
                         <br/>
                         <div class="tap-counter-num" onclick='incrementCount(here(event).$time)'>0</div>
