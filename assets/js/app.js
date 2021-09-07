@@ -100,10 +100,12 @@ $(function() {
         // Running timers will update timer DOMs
         for(key in timers) {
             if(typeof timers[key].running!=="undefined" && timers[key].running) {
-                const uid = timers[key].uid;
+                const timer = timers[key];
+                const uid = timer.uid;
                 const $timer = utility.get$Timer(uid);
-                let totalSecs = timers[key].current;
-            
+
+                // Update timemark
+                let totalSecs = timer.current;
                 const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
                 const $timemark = $timer.find(".timemark-container .output");
                 const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
@@ -111,7 +113,15 @@ $(function() {
                 $hh.text(hrs<10?`0${hrs}`:hrs);
                 $mm.text(mins<10?`0${mins}`:mins);
                 $ss.text(secs<10?`0${secs}`:secs);
-                // console.log($timer);
+
+                // Red timer element if time elapsed
+                let alarmSecs = timer.alarm;
+                if(totalSecs!==0 && totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                    if(!$timer.hasClass("red")) {
+                        $timer.addClass("red");
+                    } // if not alarmed yet
+                }
+                
             }
         }
     }, 100);
@@ -124,6 +134,11 @@ $(function() {
  */
 const utility = {
     $layout: $("main"),
+
+    isLooper: (uid) => {
+        const $timer = this.get$Timer(uid);
+        return $timer.find(".loop.active").length>0;
+    },
 
     // convert total secs to hrs, mins, secs
     cvtTotalSecsToTimeComp: (totalSecs) => {
