@@ -1,10 +1,25 @@
 // Create one timer at start
 $(function() {
+    // Event listeners
+    // - Create new button
     $("#create-new").livequery( (i, el)=>{
         $(el).on("click", ()=>{
             new Timer();
         })
     });
+
+    // - Update alarms, and don't let "Enter" mess up contenteditable layout
+    $(".timer .alarm-container .hh, .timer .alarm-container .mm, .timer .alarm-container .ss").livequery( (i, el)=> {
+        $(el).on("blur", (event) => {
+            const uid = $(event.target).closest('[data-uid]').attr('data-uid');
+            debugger;
+            timers.update(uid, event);
+
+        }).on("keydown", (event)=>{
+            utility.cancelEnter(event)
+        });
+    }); 
+
     $("#create-new").click();
 });
 

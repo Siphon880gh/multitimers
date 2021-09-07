@@ -55,7 +55,7 @@
                         <tr class="alarm-container">
                             <td class="label">Alarm:</td>
                             <td class="input">
-                                <span class="hh" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span><span class="colon"></span><span class="mm" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span><span class="colon"></span><span class="ss" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span>
+                                <span class="hh" contenteditable>00</span><span class="colon"></span><span class="mm" contenteditable>00</span><span class="colon"></span><span class="ss" contenteditable>00</span>
                                 <span class="fa fa-bell hoverable" onclick='let $alarmSetter = $(this).prev(".target"); shorthandSetAlarm($alarmSetter);' style="font-size:1.75ch; vertical-align:top;"></span>
                             </td>
                         </tr>
