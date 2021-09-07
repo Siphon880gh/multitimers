@@ -9,7 +9,6 @@ $(function() {
     });
 
     // - evL: Title editing update and visual logic of clearing the edit icon
-    // onblur=" onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");'
     $(".timer-title").livequery( (i, el)=> {
         $(el).on("blur", (event) => {
             const uid = utility.getUIDfromEvent(event);
@@ -22,6 +21,14 @@ $(function() {
         });
 
     });
+
+    // - evL: Remove alarm
+    $('.remove-timer').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const uid = utility.getUIDfromEvent(event);
+            timers.removeAlarm(uid, event);
+        });
+    }); // livequery
 
     // - evL: Update alarms, and don't let "Enter" mess up contenteditable layout
     $(".timer .alarm-container .hh, .timer .alarm-container .mm, .timer .alarm-container .ss").livequery( (i, el)=> {
@@ -96,7 +103,7 @@ class $Timer {
  * timers have methods and elements
  */
 window.timers = {
-    remove: function(uid, event) {
+    removeAlarm: function(uid, event) {
         let timer = this[uid];
         let $timer = $(`[data-uid="${uid}"]`);
 

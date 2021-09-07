@@ -45,7 +45,7 @@
                 <div data-uid="__uid__" class="time-tile timer" data-o data-init style="position:relative;">
                     <div class="section-header">Timer</div>
                     <div class="timer-title" contenteditable>Title <span class="fa fa-edit"></span></div>
-                    <button class="remove-timer" data-role="none" type="button" onclick="timers.remove('__uid__', event);"><span class="fa fa-close"></button>
+                    <button class="remove-timer" data-role="none" type="button"><span class="fa fa-times"></button>
                     <table>
                         <tbody>
                         <tr>

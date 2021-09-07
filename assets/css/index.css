@@ -122,12 +122,12 @@ hr {
     opacity: .25;
 }
 
-.fa-close {
-    color: red;
+.fa-times {
     opacity: 1;
 }
 
-.fa-close:hover {
+.fa-times:hover {
+    color: red;
     opacity: .8;
 }
 
