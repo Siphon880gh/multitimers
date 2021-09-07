@@ -104,12 +104,13 @@ $(function() {
         for(key in timers) {
             if(typeof timers[key].running!=="undefined" && timers[key].running) {
                 // Updates model time
-                const uid = timers[key].uid;
-                timers[key].current++;
+                const timer = timers[key];
+                const uid = timer.uid;
+                timer.current++;
 
                 // Restarts time if loop on
                 if(utility.isLooping(uid)) {
-                    if(timer.current >= timer.alarm) {
+                    if(timer.current > timer.alarm) { // Do not use >= or it wont beep
                         timer.current = 0;
                     }
         
@@ -132,6 +133,7 @@ $(function() {
                 const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
                 const $timemark = $timer.find(".timemark-container .output");
                 const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
+                // console.log({hrs,mins,secs});
                 
                 $hh.text(hrs<10?`0${hrs}`:hrs);
                 $mm.text(mins<10?`0${mins}`:mins);
