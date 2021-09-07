@@ -1,5 +1,10 @@
 // Create one timer at start
 $(function() {
+    $("#create-new").livequery( (i, el)=>{
+        $(el).on("click", ()=>{
+            new Timer();
+        })
+    });
     $("#create-new").click();
 });
 
@@ -9,7 +14,13 @@ $(function() {
  * Utility for the other structures
  */
 const utility = {
-    $layout: $("main")
+    $layout: $("main"),
+    cancelEnter: (event) => {
+        if(event.keyCode===13) { 
+            event.stopPropagation(); 
+            event.preventDefault(); 
+        }
+    }
 }
 
 /**
@@ -18,13 +29,13 @@ const utility = {
  */
 class Timer {
     constructor() {
-        const uid = Date.now();
+        const uid = Date.now() + "";
         const timer = {
             uid,
             label: "",
             running: false,
             current: 0,
-            goal: 0,
+            alarm: 0,
             tapping: {
                 evenLabel: "",
                 oddLabel: "",
@@ -32,9 +43,11 @@ class Timer {
             }
         }
 
+        // Update model
         window.timers[uid] = timer;
+        new $Timer(uid);
     }
-}
+} // class Timer
 
 /**
  * $Timer is DOM
@@ -42,7 +55,7 @@ class Timer {
 class $Timer {
     constructor(uid) {
         let template = $("template").html();
-        template = template.replace("__uid__", uid);
+        template = template.replaceAll("__uid__", uid);
         utility.$layout.append(template);
     }
 }
@@ -51,8 +64,36 @@ class $Timer {
  * timers have methods and elements
  */
 window.timers = {
+    updateAlarm: function(uid, event) {
+        let timer = this[uid];
+        let $timer = $(`[data-uid="${uid}"]`);
 
-};
+        let $alarm = $timer.find(".alarm-container");
+        let secs = (parseInt($alarm.find(".hh").text())*60*60) + (parseInt($alarm.find(".mm").text())*60) + parseInt($alarm.find(".ss").text());
+        timer.alarm = secs;
+
+        event.stopPropagation();
+    },
+
+    remove: function(uid, event) {
+        let timer = this[uid];
+        let $timer = $(`[data-uid="${uid}"]`);
+        let title = $timer.find(".title").text();
+        title = title.length?title:"<Untitled>";
+
+        if(confirm(`You sure you want to remove timer ${title}?`)) {
+
+
+            // Remove model and view
+            delete timers[uid];
+            $timer.remove();
+        }
+        
+        event.stopPropagation();
+    }
+
+    // The rest is a map
+}
 
 var newStopWatch = function( $time ) {
     this.$time = $time;
@@ -184,13 +225,13 @@ function incrementCount($time) {
     } // ^ odd
 } // incrementCount
 
-function initNewTimeTiles() {
-$("[data-init]").each( (i,el)=> { 
-    var $el = $(el);
-    (new newStopWatch($el)).update();
-    $el.removeAttr("data-init");
-});
-}
+// function initNewTimeTiles() {
+// $("[data-init]").each( (i,el)=> { 
+//     var $el = $(el);
+//     (new newStopWatch($el)).update();
+//     $el.removeAttr("data-init");
+// });
+// }
 
 function setTapCounterLabels(event) {
     var instance = here(event);
@@ -314,13 +355,6 @@ function playPause(event) {
         $time.find(".fa-pause").removeClass("fa-pause").addClass("fa-play");
     }
 } // playPause
-
-function cancelEnter(event) {
-    if(event.keyCode===13) { 
-        event.stopPropagation(); 
-        event.preventDefault(); 
-    }
-} // cancelEnter
 
 function help() {
     if($("#desc-1").hasClass("hide")) {

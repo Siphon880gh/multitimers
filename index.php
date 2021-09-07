@@ -13,6 +13,9 @@
 
     <!-- Articulate JS -->
     <script src="assets/js/vendors/articulate.js/articulate.min.js"></script>
+
+    <!-- Livequery -->
+    <script src="//raw.githack.com/hazzik/livequery/master/src/jquery.livequery.js"></script>
     
 </head>
     <body>
@@ -24,7 +27,7 @@
             <hr id="main-hr" />
             <div class="spacer-v"></div>
             <aside>	
-                <button id="create-new" onclick='$("main").append($("template").html()); initNewTimeTiles();' style="font-size:1.17rem;">
+                <button id="create-new">
                     <span class="fa fa-plus">&nbsp;New Timer</span>
                 </button>
             </aside>
@@ -32,41 +35,39 @@
             <main></main>
 
             <template>
-                <div data-id="__uid__" class="time-tile" data-o data-init style="position:relative;">
-                    <h4 class="subtitle" contenteditable onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");' style="margin-bottom:5px;">Title <span class="fa fa-edit"></span></h4>
-                    <button data-role="none" type="button" onclick="removeThisTimer(event);" style="position: absolute; top:5px; right:0;"><span class="fa fa-close"></button>
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>Countup:</td>
-                        <td><span class="timemark"></span></td>
-                    </tr>
-                    <tr>
-                        <td class="alarm-label">Alarm:</td>
-                        <td class="alarm-input">
-                            <span class="target">
-                            <span class="hh" onblur="validate(event)" onkeydown="cancelEnter(event);" contenteditable>00</span><span class="colon"></span><span class="mm" onblur="validate(event)" onkeydown="cancelEnter(event);" contenteditable>00</span><span class="colon"></span><span class="ss" onblur="validate(event)" onkeydown="cancelEnter(event);" contenteditable>00</span></span>
-                            <span class="fa fa-bell" onclick='let $alarmSetter = $(this).prev(".target"); shorthandSetAlarm($alarmSetter);' style="font-size:1.75ch; vertical-align:top;"></span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="text-center">	
-                <!-- <div class="text-center" v>	 -->
+                <div data-uid="__uid__" class="time-tile timer" data-o data-init style="position:relative;">
+                    <h4 class="title" contenteditable onclick='document.execCommand("", false, null); if($(this).find(".fa-edit").length) $(this).text("");'>Title <span class="fa fa-edit"></span></h4>
+                    <button class="remove-timer" data-role="none" type="button" onclick="timers.remove('__uid__', event);"><span class="fa fa-close"></button>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td>Countup:</td>
+                            <td><span class="timemark">00:00:00</span></td>
+                        </tr>
+                        <tr class="alarm-container">
+                            <td class="label">Alarm:</td>
+                            <td class="input">
+                                <span class="hh" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span><span class="colon"></span><span class="mm" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span><span class="colon"></span><span class="ss" onblur="timers.updateAlarm('__uid__', event)" onkeydown="utility.cancelEnter(event)" contenteditable>00</span>
+                                <span class="fa fa-bell hoverable" onclick='let $alarmSetter = $(this).prev(".target"); shorthandSetAlarm($alarmSetter);' style="font-size:1.75ch; vertical-align:top;"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
 
-                    <button class="play-timer" data-role="none" type="button" onclick="playPause(event);"><span class="fa fa-play"/></button>
-                    <button class="repeat-timer" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-backward"/></button>
-                    <button class="loop" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
-                    <hr/>
-                    <div class="tap-counter-wrapper">
-                        <span style="text-align:left; font-weight:550;">Tap Counter:</span><br/>
-                        <span class="fa fa-backward icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
-                        <span class="fa fa-edit icon" onclick='setTapCounterLabels(event)'></span>
-                        <br/>
-                        <div class="tap-counter-num" onclick='incrementCount(here(event).$time)'>0</div>
-                        <div class="tap-counter-label" style="font-size:.75rem"></div>
+                        <button class="play-timer hoverable" data-role="none" type="button" onclick="playPause(event);"><i class="fa fa-play"></i></button>
+                        <button class="repeat-timer hoverable" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-backward"/></button>
+                        <button class="loop hoverable" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
+                        <hr/>
+                        <div class="tap-counter-wrapper">
+                            <span style="text-align:left; font-weight:550;">Tap Counter:</span><br/>
+                            <span class="fa fa-backward icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
+                            <span class="fa fa-edit icon" onclick='setTapCounterLabels(event)'></span>
+                            <br/>
+                            <div class="tap-counter-num" onclick='incrementCount(here(event).$time)'>0</div>
+                            <div class="tap-counter-label" style="font-size:.75rem"></div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </template>
         </div> <!-- /.container -->
