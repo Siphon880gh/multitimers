@@ -85,16 +85,39 @@ $(function() {
         });
     }); // livequery
 
+    setInterval(()=>{
+        // Running timers will increment timers
+        for(key in timers) {
+            if(typeof timers[key].running!=="undefined" && timers[key].running) {
+                const uid = timers[key].uid;
+                timers[key].current++;
+            }
+        }
+    }, 1000);
+
+
+    setInterval(()=>{
+        // Running timers will update timer DOMs
+        for(key in timers) {
+            if(typeof timers[key].running!=="undefined" && timers[key].running) {
+                const uid = timers[key].uid;
+                const $timer = utility.get$Timer(uid);
+                // console.log($timer);
+            }
+        }
+    }, 100);
+
     $("#create-new").click();
 });
-
-// <button id="create-new" onclick='initNewTimeTiles();' style="font-size:1.17rem;">
 
 /**
  * Utility for the other structures
  */
 const utility = {
     $layout: $("main"),
+    get$Timer: (uid) => {
+        return $(`[data-uid="${uid}"]`);
+    },
     cancelEnter: (event) => {
         if(event.keyCode===13) { 
             event.stopPropagation(); 
@@ -155,7 +178,7 @@ window.timers = {
     },
     removeAlarm: function(uid, event) {
         let timer = this[uid];
-        let $timer = $(`[data-uid="${uid}"]`);
+        let $timer = utility.get$Timer(uid);
 
         let title = $timer.find(".title").text();
         title = title.length?title:"<Untitled>";
@@ -172,7 +195,7 @@ window.timers = {
 
     updateTitle: function(uid, event) {
         let timer = this[uid];
-        let $timer = $(`[data-uid="${uid}"]`);
+        let $timer = utility.get$Timer(uid);
 
         let title = $timer.find(".timer-title").text();
         title = title.length?title:"<Untitled>";
