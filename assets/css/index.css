@@ -1,0 +1,98 @@
+.loop.active {
+    color: green;
+}
+#title {
+    margin-bottom: 10px;  
+}
+#desc-1, #desc-2 {
+    margin-bottom: 20px;
+}
+aside {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.time-tile {
+    margin-bottom: 10px;
+    border: 2px solid gray;
+    display: inline-block;
+    padding: 5px;
+    border-radius:5px;
+    vertical-align: top;
+}
+.time-tile button {
+    border: 0;
+    cursor: pointer;
+}
+.subtitle {
+    padding-right: 12px;
+    margin: 0;
+    /* cursor: alias; */
+}
+/* .fa-edit {
+    cursor: alias;
+} */
+.fa-edit:hover, 
+.fa-bell:hover {
+    color: red;
+    cursor: pointer;
+}
+.target{
+    font-weight: 100;
+}
+.alarm-label, .alarm-input {
+    color: gray;
+}
+.hh, .mm, .ss {
+cursor: alias;
+}
+.colon:after {
+content: ":";
+}
+.text-center {
+text-align: center;
+}
+.red {
+background-color: red;
+}
+.time-tile:not(.red) .replay-container { display:none; }
+
+.tap-counter-wrapper {
+    opacity: .7;
+}
+.tap-counter-wrapper .tap-counter-num {
+    font-size: 2rem;
+}
+.tap-counter-wrapper .icon {
+    font-size:1ch;
+    cursor: pointer;
+    margin-left:1ch;
+}
+.tap-counter-wrapper .icon:hover {
+    color: red;
+}
+button {
+    background-color: transparent;
+}
+a.fa-question {
+    text-decoration: none !important;
+}
+.hide {
+    display: none;
+}
+.spacer-v {
+    width: 1px;
+    height: 10px;
+}
+hr {
+    border-width: 1px 0 0 0;
+    width: 75%;
+    margin: 5px auto;
+    opacity: .25;
+}
+.fa-close {
+    color: red;
+    opacity: 1;
+}
+.fa-close:hover {
+    opacity: .8;
+}
