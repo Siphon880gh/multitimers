@@ -85,6 +85,19 @@ $(function() {
         });
     }); // livequery
 
+    $('.loop-timer').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            // Toggle DOM state to highlighted
+            var $eventEl = $(event.target);
+            $eventEl.toggleClass("active");
+
+            // Toggle model looping state
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+            timer.looping = !timer.looping;
+        });
+    }); // livequery
+
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
         // Running timers will increment timers

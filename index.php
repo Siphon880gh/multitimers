@@ -86,7 +86,7 @@
                             <i class="fa fa-pause hide"></i>
                         </button>
                         <button class="repeat-timer hoverable" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-backward"/></button>
-                        <button class="loop-timer hoverable" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
+                        <button class="loop-timer hoverable fa fa-history" data-role="none" type="button"></button>
                     </div>
                     <hr/>
 
