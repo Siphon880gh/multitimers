@@ -90,12 +90,12 @@
                     </div>
                     <hr/>
 
-                    <div class="tap-counter-wrapper">
+                    <div class="tap-counter-section">
                         <div class="subsection-header">Tap Counter</div>
                         <div class="tap-counter-num">0</div>
                         <div class="tap-counter-label" style="font-size:.75rem"></div>
                         <div class="tap-counter-controls">
-                            <span class="fa fa-backward icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
+                            <span class="fa fa-backward icon restart-tap-counter"></span>
                             <span class="fa fa-edit icon" onclick='setTapCounterLabels(event)'></span>
                         </div>
                     </div>

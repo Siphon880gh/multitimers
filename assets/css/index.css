@@ -73,12 +73,12 @@ aside {
     text-align: center;
 }
 
-.tap-counter-wrapper {
+.tap-counter-section {
     opacity: .7;
     text-align: center;
 }
 
-.tap-counter-wrapper .tap-counter-num {
+.tap-counter-section .tap-counter-num {
     font-size: 1.15rem;
 }
 
@@ -91,11 +91,11 @@ aside {
     cursor: pointer;
 }
 
-.tap-counter-wrapper .icon:not(:first-child) {
+.tap-counter-section .icon:not(:first-child) {
     margin-left: 1ch;
 }
 
-.tap-counter-wrapper .icon:hover {
+.tap-counter-section .icon:hover {
     color: red;
 }
 

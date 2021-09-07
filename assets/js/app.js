@@ -109,12 +109,20 @@ $(function() {
 
     $('.tap-counter-num').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            const uid = utility.getUIDfromEvent(event);
             const $tapCounter = $(event.target);
             let tapCount = parseInt($tapCounter.text());
             $tapCounter.text(tapCount+1);
         });
     }); // livequery
+
+
+    $('.restart-tap-counter').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const $tapCounter = $(event.target).closest(".tap-counter-section").find(".tap-counter-num");
+            $tapCounter.text("0");
+        });
+    }); // livequery
+    
 
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
