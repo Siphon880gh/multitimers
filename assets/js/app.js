@@ -85,17 +85,27 @@ $(function() {
         });
     }); // livequery
 
+    // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
         // Running timers will increment timers
         for(key in timers) {
             if(typeof timers[key].running!=="undefined" && timers[key].running) {
+                // Updates model time
                 const uid = timers[key].uid;
                 timers[key].current++;
+
+                // Restarts time if loop on
+                if(utility.isLooping(uid)) {
+                    if(timer.current >= timer.alarm) {
+                        timer.current = 0;
+                    }
+        
+                } // if in loop mode
             }
         }
     }, 1000);
 
-
+    // Normal setInterval that can access DOM only runs when tab is active
     setInterval(()=>{
         // Running timers will update timer DOMs
         for(key in timers) {
@@ -116,14 +126,17 @@ $(function() {
 
                 // Red timer element if time elapsed
                 let alarmSecs = timer.alarm;
-                if(totalSecs!==0 && totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                if(totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
                     if(!$timer.hasClass("red")) {
                         $timer.addClass("red");
-                    } // if not alarmed yet
-                }
-                
-            }
-        }
+                    }
+                } else {
+                    if($timer.hasClass("red")) {
+                        $timer.removeClass("red");
+                    }
+                } // if out
+            } // running timers
+        } // filter out timers model
     }, 100);
 
     $("#create-new").click();
@@ -135,9 +148,9 @@ $(function() {
 const utility = {
     $layout: $("main"),
 
-    isLooper: (uid) => {
-        const $timer = this.get$Timer(uid);
-        return $timer.find(".loop.active").length>0;
+    isLooping: (uid) => {
+        const timer = timers[uid];
+        return timer.looping;
     },
 
     // convert total secs to hrs, mins, secs
@@ -179,6 +192,7 @@ class Timer {
             uid,
             title: "",
             running: false,
+            looping: false,
             current: 0,
             alarm: 0,
             tapping: {
