@@ -48,9 +48,10 @@
                     <button class="remove-timer" data-role="none" type="button"><span class="fa fa-times"></button>
                     <table>
                         <tbody>
-                        <tr>
+                        <tr class="timemark-container">
                             <td>Countup:</td>
-                            <td><span class="timemark">00:00:00</span></td>
+                            <td><span class="output">
+                                <span class="hh" contenteditable>00</span><span class="colon"></span><span class="mm" contenteditable>00</span><span class="colon"></span><span class="ss" contenteditable>00</span></span></td>
                         </tr>
                         <tr class="alarm-container">
                             <td class="label">Alarm:</td>

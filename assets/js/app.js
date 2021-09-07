@@ -102,6 +102,15 @@ $(function() {
             if(typeof timers[key].running!=="undefined" && timers[key].running) {
                 const uid = timers[key].uid;
                 const $timer = utility.get$Timer(uid);
+                let totalSecs = timers[key].current;
+            
+                const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
+                const $timemark = $timer.find(".timemark-container .output");
+                const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
+                
+                $hh.text(hrs<10?`0${hrs}`:hrs);
+                $mm.text(mins<10?`0${mins}`:mins);
+                $ss.text(secs<10?`0${secs}`:secs);
                 // console.log($timer);
             }
         }
@@ -115,6 +124,21 @@ $(function() {
  */
 const utility = {
     $layout: $("main"),
+
+    // convert total secs to hrs, mins, secs
+    cvtTotalSecsToTimeComp: (totalSecs) => {
+        var mins = 0, hrs = 0, secs = 0;
+        hrs = parseFloat(totalSecs/60/60);
+        mins = parseFloat((hrs - parseInt(hrs))*60);
+        secs = parseFloat((mins - parseInt(mins))*60);
+        // console.log({totalSecs, hrs, mins, secs}); //
+        hrs = Math.round(hrs);
+        mins = Math.round(mins);
+        secs = Math.round(secs);
+        // console.log({totalSecs, hrs, mins, secs}); //
+        
+        return { hrs, mins, secs }
+    },
     get$Timer: (uid) => {
         return $(`[data-uid="${uid}"]`);
     },
@@ -450,17 +474,9 @@ function shorthandSetAlarm($alarmSetter) {
             totalSecs += parseFloat(subject);
     }
 
-    var mins = 0, hrs = 0, secs = 0;
-    hrs = parseFloat(totalSecs/60/60);
-    mins = parseFloat((hrs - parseInt(hrs))*60);
-    secs = parseFloat((mins - parseInt(mins))*60);
-    console.log({totalSecs, hrs, mins, secs}); //
-    hrs = Math.round(hrs);
-    mins = Math.round(mins);
-    secs = Math.round(secs);
-    console.log({totalSecs, hrs, mins, secs}); //
+    const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
 
-    var $ss = $alarmSetter.find(".ss"),
+    const $ss = $alarmSetter.find(".ss"),
         $mm = $alarmSetter.find(".mm"),
         $hh = $alarmSetter.find(".hh");
 
