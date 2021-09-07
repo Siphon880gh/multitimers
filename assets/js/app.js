@@ -47,7 +47,6 @@ $(function() {
         });
     }); // livequery
 
-
     // - evL: Update alarms, and don't let "Enter" mess up contenteditable layout
     $(".timer .alarm-container .hh, .timer .alarm-container .mm, .timer .alarm-container .ss").livequery( (i, el)=> {
         $(el).on("blur", (event) => {
@@ -57,7 +56,34 @@ $(function() {
         }).on("keydown", (event)=>{
             utility.cancelEnter(event)
         });
-    }); 
+    });
+
+    // - evL: Play/Pause
+    $('.fa-play').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            var $eventEl = $(event.target);
+            const uid = utility.getUIDfromEvent(event);
+
+            // Toggle DOM
+            $eventEl.addClass("hide");
+            $eventEl.next().removeClass("hide");
+
+            timers.pauseTimer(uid, event);
+        });
+    }); // livequery
+
+    $('.fa-pause').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            var $eventEl = $(event.target);
+            const uid = utility.getUIDfromEvent(event);
+
+            // Toggle DOM
+            $eventEl.addClass("hide");
+            $eventEl.prev().removeClass("hide");
+
+            timers.resumeTimer(uid, event);
+        });
+    }); // livequery
 
     $("#create-new").click();
 });

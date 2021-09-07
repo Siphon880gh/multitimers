@@ -80,9 +80,12 @@
                     </table>
 
                     <div class="timer-controls">
-                        <button class="play-timer hoverable" data-role="none" type="button" onclick="playPause(event);"><i class="fa fa-play"></i></button>
+                        <button class="play-timer hoverable" data-role="none" type="button">
+                            <i class="fa fa-play"></i>
+                            <i class="fa fa-pause hide"></i>
+                        </button>
                         <button class="repeat-timer hoverable" data-role="none" type="button" onclick="here(event).reset(); here(event).start()"><span class="fa fa-backward"/></button>
-                        <button class="loop hoverable" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
+                        <button class="loop-timer hoverable" data-role="none" type="button" onclick="$(this).toggleClass('active'); if($(this).hasClass('active')) { if($(this).parent().find('.fa-play').length) $(this).parent().find('.play-timer').click(); }"><span class="fa fa-history"/></button>
                     </div>
                     <hr/>
 
