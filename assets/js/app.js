@@ -68,7 +68,7 @@ $(function() {
             $eventEl.addClass("hide");
             $eventEl.next().removeClass("hide");
 
-            timers.pauseTimer(uid, event);
+            timers.resumeTimer(uid, event);
         });
     }); // livequery
 
@@ -81,7 +81,7 @@ $(function() {
             $eventEl.addClass("hide");
             $eventEl.prev().removeClass("hide");
 
-            timers.resumeTimer(uid, event);
+            timers.pauseTimer(uid, event);
         });
     }); // livequery
 
@@ -147,6 +147,12 @@ class $Timer {
  * timers have methods and elements
  */
 window.timers = {
+    pauseTimer: function(uid, event) {
+        this[uid].running = false;
+    },
+    resumeTimer: function(uid, event) {
+        this[uid].running = true;
+    },
     removeAlarm: function(uid, event) {
         let timer = this[uid];
         let $timer = $(`[data-uid="${uid}"]`);
