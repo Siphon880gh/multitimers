@@ -375,43 +375,45 @@ function replay(event) {
  * @returns total secs
  */
 function shorthandSetAlarm($alarmSetter) {
-    var line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h):");
+    let line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h):");
     if(line===null || line===undefined) return;
-    line = line.replace(" ", "");
+    line = line.toLowerCase();
+    line = line.replaceAll("hours", "h").replaceAll("hour", "h").replaceAll("hr", "h").replaceAll("h", "h,");
+    line = line.replaceAll("mins", "m").replaceAll("min", "m").replaceAll("m", "m,");
+    line = line.replaceAll("secs", "s").replaceAll("sec", "s").replaceAll("s", "s,");
+    let phrases = line.split(",");
+ 
+    // You want the total hours so you can have shorthands like 120m be changed to 2 hours
+    var totalSecs = 0;
+    for(var i = 0; i < phrases.length; i++) {
+        let subject = phrases[i];
+        if(subject.indexOf("h")>-1)
+            totalSecs += parseFloat(subject) * 60 * 60;
+        else if(subject.indexOf("m")>-1)
+            totalSecs += parseFloat(subject) * 60;
+        else if(subject.indexOf("s")>-1)
+            totalSecs += parseFloat(subject);
+    }
+
     var mins = 0, hrs = 0, secs = 0;
-    var totalHrs = 0;
-    
-    var match = null;
-
-    match = line.match(/([0-9\.]*?)h/);
-    if(match!==null) {
-        totalHrs += parseFloat(match[1]);
-    }
-
-    match = line.match(/([0-9\.]*?)m/);
-    if(match!==null) {
-        totalHrs += parseFloat(match[1])/60;
-    }
-
-    match = line.match(/([0-9\.]*?)s/);
-    if(match!==null) {
-        totalHrs += parseFloat(match[1])/3600;
-    }
-
-    hrs = parseInt(totalHrs);
-    mins = parseInt((totalHrs - parseInt(totalHrs))*60);
-    secs = ( ((totalHrs - parseInt(totalHrs))*60) - parseInt((totalHrs - parseInt(totalHrs))*60) )*60;
-    secs = parseInt(secs);
+    hrs = parseFloat(totalSecs/60/60);
+    mins = parseFloat((hrs - parseInt(hrs))*60);
+    secs = parseFloat((mins - parseInt(mins))*60);
+    console.log({totalSecs, hrs, mins, secs}); //
+    hrs = Math.round(hrs);
+    mins = Math.round(mins);
+    secs = Math.round(secs);
+    console.log({totalSecs, hrs, mins, secs}); //
 
     var $ss = $alarmSetter.find(".ss"),
         $mm = $alarmSetter.find(".mm"),
         $hh = $alarmSetter.find(".hh");
 
-    $ss.text(secs<10?`0${secs}`:secs);
-    $mm.text(mins<10?`0${mins}`:mins);
     $hh.text(hrs<10?`0${hrs}`:hrs);
+    $mm.text(mins<10?`0${mins}`:mins);
+    $ss.text(secs<10?`0${secs}`:secs);
 
-    return (hrs * 60 * 60) + (mins * 60) + secs;
+    return totalSecs;
 
 } // shorthandSetAlarm
 
