@@ -6,8 +6,7 @@
     margin-bottom: 10px;
 }
 
-#desc-1,
-#desc-2 {
+#desc {
     margin-bottom: 20px;
 }
 
@@ -33,6 +32,7 @@ aside {
 .title {
     margin: 0 0 5px 0;
     padding-right: 12px;
+    font-weight: 500;
 }
 
 .hoverable:hover {
@@ -42,6 +42,10 @@ aside {
 
 .alarm-container {
     font-weight: 100;
+    color: gray !important;
+}
+
+.beeps-number {
     color: gray !important;
 }
 
@@ -55,10 +59,6 @@ aside {
     content: ":";
 }
 
-.text-center {
-    text-align: center;
-}
-
 .red {
     background-color: red;
 }
@@ -67,17 +67,30 @@ aside {
     display: none;
 }
 
+.timer-controls {
+    margin: 10px 0;
+    text-align: center;
+}
+
 .tap-counter-wrapper {
     opacity: .7;
+    text-align: center;
 }
 
 .tap-counter-wrapper .tap-counter-num {
-    font-size: 2rem;
+    font-size: 1.15rem;
 }
 
-.tap-counter-wrapper .icon {
+.tap-counter-num {
+    margin-top: 5px;
+}
+
+.tap-counter-controls .icon {
     font-size: 1ch;
     cursor: pointer;
+}
+
+.tap-counter-wrapper .icon:not(:first-child) {
     margin-left: 1ch;
 }
 
@@ -126,4 +139,21 @@ hr {
     position: absolute;
     top: 5px;
     right: 0;
+}
+
+.announce {
+    width: 50px;
+}
+
+.section-header {
+    text-align: center;
+    font-weight: 550;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.subsection-header {
+    text-align: center;
+    font-weight: 550;
+    font-size: 1.15rem;
 }
