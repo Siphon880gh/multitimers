@@ -32,7 +32,7 @@ class Timer {
         const uid = Date.now() + "";
         const timer = {
             uid,
-            label: "",
+            title: "",
             running: false,
             current: 0,
             alarm: 0,
@@ -64,6 +64,35 @@ class $Timer {
  * timers have methods and elements
  */
 window.timers = {
+    remove: function(uid, event) {
+        let timer = this[uid];
+        let $timer = $(`[data-uid="${uid}"]`);
+
+        let title = $timer.find(".title").text();
+        title = title.length?title:"<Untitled>";
+
+        if(confirm(`You sure you want to remove timer ${title}?`)) {
+
+            // Remove model and view
+            delete timers[uid];
+            $timer.remove();
+        }
+        
+        event.stopPropagation();
+    },
+
+    updateTitle: function(uid, event) {
+        let timer = this[uid];
+        let $timer = $(`[data-uid="${uid}"]`);
+
+        let title = $timer.find(".title").text();
+        title = title.length?title:"<Untitled>";
+
+        timer.title = title;
+
+        event.stopPropagation();
+    },
+
     updateAlarm: function(uid, event) {
         let timer = this[uid];
         let $timer = $(`[data-uid="${uid}"]`);
@@ -72,23 +101,6 @@ window.timers = {
         let secs = (parseInt($alarm.find(".hh").text())*60*60) + (parseInt($alarm.find(".mm").text())*60) + parseInt($alarm.find(".ss").text());
         timer.alarm = secs;
 
-        event.stopPropagation();
-    },
-
-    remove: function(uid, event) {
-        let timer = this[uid];
-        let $timer = $(`[data-uid="${uid}"]`);
-        let title = $timer.find(".title").text();
-        title = title.length?title:"<Untitled>";
-
-        if(confirm(`You sure you want to remove timer ${title}?`)) {
-
-
-            // Remove model and view
-            delete timers[uid];
-            $timer.remove();
-        }
-        
         event.stopPropagation();
     }
 
