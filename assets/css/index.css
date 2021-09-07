@@ -22,6 +22,7 @@ aside {
     padding: 5px;
     border-radius: 5px;
     vertical-align: top;
+    position: relative;
 }
 
 .time-tile button {
@@ -129,6 +130,11 @@ hr {
 .fa-times:hover {
     color: red;
     opacity: .8;
+}
+
+.fa-bell {
+    font-size: 1.75ch;
+    vertical-align: top;
 }
 
 #create-new {

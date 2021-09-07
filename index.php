@@ -42,7 +42,7 @@
             <main></main>
 
             <template>
-                <div data-uid="__uid__" class="time-tile timer" data-o data-init style="position:relative;">
+                <div data-uid="__uid__" class="time-tile timer" data-o data-init>
                     <div class="section-header">Timer</div>
                     <div class="timer-title" contenteditable>Title <span class="fa fa-edit"></span></div>
                     <button class="remove-timer" data-role="none" type="button"><span class="fa fa-times"></button>
@@ -56,7 +56,7 @@
                             <td class="label">Alarm:</td>
                             <td class="input">
                                 <span class="hh" contenteditable>00</span><span class="colon"></span><span class="mm" contenteditable>00</span><span class="colon"></span><span class="ss" contenteditable>00</span>
-                                <span class="fa fa-bell hoverable" onclick='let $alarmSetter = $(this).prev(".target"); shorthandSetAlarm($alarmSetter);' style="font-size:1.75ch; vertical-align:top;"></span>
+                                <span class="fa fa-bell hoverable"></span>
                             </td>
                         </tr>
                         <tr class="alarm-container">

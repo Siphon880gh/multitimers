@@ -30,6 +30,24 @@ $(function() {
         });
     }); // livequery
 
+    // - evL: Shorthand entry alarm time
+    $('.fa-bell').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const $eventEl = $(event.target);
+            const uid = utility.getUIDfromEvent(event);
+            const timerModel = timers[uid];
+
+            // Set DOM
+            const $alarmSetter = $eventEl.closest(".input"); 
+            const totalSecs = shorthandSetAlarm($alarmSetter);
+
+            // Set Model
+            timerModel.alarm = totalSecs;
+            
+        });
+    }); // livequery
+
+
     // - evL: Update alarms, and don't let "Enter" mess up contenteditable layout
     $(".timer .alarm-container .hh, .timer .alarm-container .mm, .timer .alarm-container .ss").livequery( (i, el)=> {
         $(el).on("blur", (event) => {
@@ -349,6 +367,13 @@ function replay(event) {
     $timeTile.find(".fa-backward").click();
     $timeTile.find(".fa-play").click();
 }
+/**
+ * 
+ * @function shorthandSetAlarm 
+ * @param {jqueryDom} $alarmSetter points to a container of hh, mm, ss
+ * @procedural sets DOM of alarm
+ * @returns total secs
+ */
 function shorthandSetAlarm($alarmSetter) {
     var line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h):");
     if(line===null || line===undefined) return;
@@ -385,6 +410,8 @@ function shorthandSetAlarm($alarmSetter) {
     $ss.text(secs<10?`0${secs}`:secs);
     $mm.text(mins<10?`0${mins}`:mins);
     $hh.text(hrs<10?`0${hrs}`:hrs);
+
+    return (hrs * 60 * 60) + (mins * 60) + secs;
 
 } // shorthandSetAlarm
 
