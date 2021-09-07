@@ -107,6 +107,15 @@ $(function() {
         });
     }); // livequery
 
+    $('.tap-counter-num').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const uid = utility.getUIDfromEvent(event);
+            const $tapCounter = $(event.target);
+            let tapCount = parseInt($tapCounter.text());
+            $tapCounter.text(tapCount+1);
+        });
+    }); // livequery
+
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
         // Running timers will increment timers
@@ -221,8 +230,7 @@ class Timer {
             alarm: 0,
             tapping: {
                 evenLabel: "",
-                oddLabel: "",
-                current: 0
+                oddLabel: ""
             }
         }
 

@@ -92,7 +92,7 @@
 
                     <div class="tap-counter-wrapper">
                         <div class="subsection-header">Tap Counter</div>
-                        <div class="tap-counter-num" onclick='incrementCount(here(event).$time)'>0</div>
+                        <div class="tap-counter-num">0</div>
                         <div class="tap-counter-label" style="font-size:.75rem"></div>
                         <div class="tap-counter-controls">
                             <span class="fa fa-backward icon" onclick='$(this).parent().find(".tap-counter-num").text(0);'></span>
@@ -105,13 +105,6 @@
         </div> <!-- /.container -->
 
         <script src="assets/js/beep.js"></script>
-        <script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
-        <script>
-            // setInterval(()=>{
-            //     beep();
-            //     console.log("Beeped")
-            // }, 2000);
-
-        </script>
+        <script src="assets/js/app.js"></script>
     </body>
 </html>
