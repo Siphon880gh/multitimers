@@ -98,6 +98,15 @@ $(function() {
         });
     }); // livequery
 
+    $('.reset-timer').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            // Reset model time state
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+            timer.current = 0;
+        });
+    }); // livequery
+
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
         // Running timers will increment timers
