@@ -58,6 +58,16 @@ $(function() {
         });
     });
 
+    $('.alarm-times').livequery((i, el)=> {
+        $(el).on('change', (event) => {
+            var $eventEl = $(event.target);
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+
+            timer.alarmTimes = parseInt($eventEl.val());
+        });
+    }); // livequery
+    
     $('.announce').livequery((i, el)=> {
         $(el).on('change', (event) => {
             var $eventEl = $(event.target);

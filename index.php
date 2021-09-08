@@ -63,7 +63,7 @@
                         <tr class="alarm-container">
                             <td colspan="2">
                                 <span>Beep x</span>
-                                <select class="beeps-number">
+                                <select class="alarm-times">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
