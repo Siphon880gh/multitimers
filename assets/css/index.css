@@ -61,7 +61,7 @@ aside {
 }
 
 .red {
-    background-color: rgba(255, 0, 0, .6);
+    background-color: rgba(255, 0, 0, .7);
 }
 
 .time-tile:not(.red) .replay-container {

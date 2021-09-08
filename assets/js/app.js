@@ -197,15 +197,17 @@ $(function() {
 
                 // Red timer element if time elapsed
                 let alarmSecs = timer.alarm;
-                if(totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
-                    if(!$timer.hasClass("red")) {
-                        $timer.addClass("red");
-                    }
-                } else {
-                    if($timer.hasClass("red")) {
-                        $timer.removeClass("red");
-                    }
-                } // if out
+                if(alarmSecs!==0) {
+                    if(totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                        if(!$timer.hasClass("red")) {
+                            $timer.addClass("red");
+                        }
+                    } else {
+                        if($timer.hasClass("red")) {
+                            $timer.removeClass("red");
+                        }
+                    } // if out
+                }
             } // running timers
         } // filter out timers model
     }, 100);
