@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-   <title>Multitimers</title>
+
+<head>
+    <title>Multitimers</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
@@ -16,32 +17,35 @@
 
     <!-- Livequery -->
     <script src="//raw.githack.com/hazzik/livequery/master/src/jquery.livequery.js"></script>
-    
+
 </head>
-    <body>
-        <div class="container">
-            <h1 id="title">Multiple Timers (Non-obtrusive)</h1>
-            <div id="desc">
-                <div class="author-line">
-                    <span>By Weng Fei Fung</span>
-                    <a href="https://www.linkedin.com/in/weng-fung/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://github.com/Siphon880gh/" target="_blank"><i class="fab fa-github"></i></a>
-                    <a href="https://www.youtube.com/channel/UCg1O9uttSv3ZBzd1iep25Ig/" target="_blank"><i class="fab fa-youtube"></i></a>
-                </div>
 
-                <p>Add as many countup timers as you want. You can turn the countup into an alarm. You can use a tap counter with each timer. Name the timers. Put the tab away in the background and it will still work. <a href="javascript:void(0);" onclick="$(this).next().toggleClass('hide');"><i class="fa fa-question"></i></a><span class="hide"> I coded the alarms to be non-obtrusive so that they do not continually beep until you're forced to interact with the alarm. A timer will stay red to let you know the alarm has elapsed. If you find that it's too non-obtrusive, you can have a timer beep multiple times, then announce a word or sentence.</span></p></div>
+<body>
+    <div class="container">
+        <h1 id="title">Multiple Timers (Non-obtrusive)</h1>
+        <div id="desc">
+            <div class="author-line">
+                <span>By Weng Fei Fung</span>
+                <a href="https://www.linkedin.com/in/weng-fung/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/Siphon880gh/" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.youtube.com/channel/UCg1O9uttSv3ZBzd1iep25Ig/" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
 
-            <hr id="main-hr" />
-            <div class="spacer-v"></div>
-            <aside>	
-                <button id="create-new">
+            <p>Add as many countup timers as you want. You can turn the countup into an alarm. You can use a tap counter with each timer. Name the timers. Put the tab away in the background and it will still work.
+                <a href="javascript:void(0);" onclick="$(this).next().toggleClass('hide');"><i class="fa fa-question"></i></a><span class="hide"> I coded the alarms to be non-obtrusive so that they do not continually beep until you're forced to interact with the alarm. A timer will stay red to let you know the alarm has elapsed. If you find that it's too non-obtrusive, you can have a timer beep multiple times, then announce a word or sentence.</span></p>
+        </div>
+
+        <hr id="main-hr" />
+        <div class="spacer-v"></div>
+        <aside>
+            <button id="create-new">
                     <span class="fa fa-plus">&nbsp;New Timer</span>
                 </button>
-            </aside>
+        </aside>
 
-            <main></main>
+        <main></main>
 
-            <template>
+        <template>
                 <div data-uid="__uid__" class="time-tile timer" data-o data-init>
                     <div class="section-header">Timer</div>
                     <div class="timer-title" contenteditable>Title <span class="fa fa-edit"></span></div>
@@ -104,9 +108,11 @@
 
                 </div>
             </template>
-        </div> <!-- /.container -->
+    </div>
+    <!-- /.container -->
 
-        <script src="assets/js/beep.js"></script>
-        <script src="assets/js/app.js"></script>
-    </body>
+    <script src="assets/js/beep.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
 </html>
