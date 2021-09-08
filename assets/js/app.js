@@ -58,6 +58,16 @@ $(function() {
         });
     });
 
+    $('.announce').livequery((i, el)=> {
+        $(el).on('change', (event) => {
+            var $eventEl = $(event.target);
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+
+            timer.alarmAnnounce = $eventEl.val();
+        });
+    }); // livequery
+
     // - evL: Play/Pause
     $('.fa-play').livequery((i, el)=> {
         $(el).on('click', (event) => {
@@ -268,6 +278,8 @@ class Timer {
             looping: false,
             current: 0,
             alarm: 0,
+            alarmTimes: 1,
+            alarmAnnounce: "",
             tapping: {
                 evenLabel: "",
                 oddLabel: ""
