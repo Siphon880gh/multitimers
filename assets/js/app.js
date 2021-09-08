@@ -185,7 +185,7 @@ $(function() {
                 const uid = timer.uid;
                 timer.current++;
 
-                if(timer.current>=timer.alarm && !timer.elapsed) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                if(timer.current>=timer.alarm && !timer.elapsed && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
                     if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
                         beep();
                     } else {
