@@ -387,7 +387,7 @@ window.timers = {
  * @returns total secs
  */
 function shorthandSetAlarm($alarmSetter) {
-    let line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h):");
+    let line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h / 1h 1m 1s / 120 secs / 2 hours / 2 mins):");
     if(line===null || line===undefined) return;
     line = line.toLowerCase();
     line = line.replaceAll("hours", "h").replaceAll("hour", "h").replaceAll("hr", "h").replaceAll("h", "h,");
