@@ -118,12 +118,13 @@ $(function() {
         });
     }); // livequery
 
-    $('.reset-timer').livequery((i, el)=> {
+    $('.restart-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            // Reset model time state
+            // restart model time state
             const uid = utility.getUIDfromEvent(event);
             const timer = timers[uid];
             timer.current = 0;
+            timer.elapsed = false;
         });
     }); // livequery
 
@@ -184,15 +185,26 @@ $(function() {
                 const uid = timer.uid;
                 timer.current++;
 
+                if(timer.current>=timer.alarm && !timer.elapsed) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                    if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
+                        beep();
+                    } else {
+                        beepNThenWord(timer.alarmTimes, timer.alarmAnnounce)
+                    }
+                    timer.elapsed = true;
+                }
+
                 // Restarts time if loop on
                 if(utility.isLooping(uid)) {
                     if(timer.current > timer.alarm) { // Do not use >= or it wont beep
                         timer.current = 0;
+                        timer.elapsed = false;
                     }
         
                 } // if in loop mode
-            }
-        }
+            
+            } // running timers only
+        } // filter out timers only
     }, 1000);
 
     // Normal setInterval that can access DOM only runs when tab is active
@@ -228,8 +240,8 @@ $(function() {
                         }
                     } // if out
                 }
-            } // running timers
-        } // filter out timers model
+            } // running timers only
+        } // filter out timers only
     }, 100);
 
     $("#create-new").click();
@@ -284,6 +296,7 @@ class Timer {
         const timer = {
             uid,
             title: "",
+            elapsed: false, // prevents repeated beeps because we want non-obtrusive
             running: false,
             looping: false,
             current: 0,

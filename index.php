@@ -85,7 +85,7 @@
                             <i class="fa fa-play"></i>
                             <i class="fa fa-pause hide"></i>
                         </button>
-                        <button class="reset-timer hoverable fa fa-backward" data-role="none" type="button"></button>
+                        <button class="restart-timer hoverable fa fa-backward" data-role="none" type="button"></button>
                         <button class="loop-timer hoverable fa fa-history" data-role="none" type="button"></button>
                     </div>
                     <hr/>

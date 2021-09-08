@@ -21,9 +21,9 @@ function beepNThenWord(n, word) {
             clearInterval(playingBeep);
 
             // Play optional text
-            if(typeof word!=="undefined") {
+            if(typeof word!=="undefined" && word.length) {
                 var a = new SpeechSynthesisUtterance(); 
-                a.text = "hi"; 
+                a.text = word; 
                 speechSynthesis.speak(a);
             }
         } // else
