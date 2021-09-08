@@ -82,13 +82,26 @@ aside {
     font-size: 1.15rem;
 }
 
-.tap-counter-num {
-    margin-top: 5px;
+.tap-counter-meaningful {
+    margin: 10px 0 7px 0;
+}
+
+.tap-counter-label {
+    margin-top: 3px;
 }
 
 .tap-counter-controls .icon {
     font-size: 1ch;
     cursor: pointer;
+}
+
+.tap-goal {
+    color: gray;
+    font-weight: 200;
+}
+
+.tap-counter-label {
+    font-size: .9rem
 }
 
 .tap-counter-section .icon:not(:first-child) {
@@ -118,7 +131,7 @@ a.fa-question {
 
 hr {
     border-width: 1px 0 0 0;
-    width: 75%;
+    width: 95%;
     margin: 5px auto;
     opacity: .25;
 }

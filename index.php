@@ -92,11 +92,13 @@
 
                     <div class="tap-counter-section">
                         <div class="subsection-header">Tap Counter</div>
-                        <div class="tap-counter-num">0</div>
-                        <div class="tap-counter-label" style="font-size:.75rem"></div>
+                        <div class="tap-counter-meaningful">
+                            <span class="tap-counter-num hoverable">0</span><span class="tap-goal"></span>
+                            <div class="tap-counter-label"></div>
+                        </div>
                         <div class="tap-counter-controls">
                             <span class="fa fa-backward icon restart-tap-counter"></span>
-                            <span class="fa fa-edit icon" onclick='setTapCounterLabels(event)'></span>
+                            <span class="fa fa-edit icon alt-label-tap-counter"></span>
                         </div>
                     </div>
 

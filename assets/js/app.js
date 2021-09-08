@@ -109,12 +109,23 @@ $(function() {
 
     $('.tap-counter-num').livequery((i, el)=> {
         $(el).on('click', (event) => {
+            // Increment tap count on DOM (no need for modeling)
             const $tapCounter = $(event.target);
             let tapCount = parseInt($tapCounter.text());
-            $tapCounter.text(tapCount+1);
+            let nextTapCount = tapCount+1;
+            $tapCounter.text(nextTapCount);
+
+            // Even / Odd labeling if appropriate
+            const uid = utility.getUIDfromEvent(event);
+            $timer = utility.get$Timer(uid);
+            timer = timers[uid];
+            if(nextTapCount%2==0) {
+                $timer.find(".tap-counter-label").text(timer.tapping.evenLabel);
+            } else {
+                $timer.find(".tap-counter-label").text(timer.tapping.oddLabel);
+            }
         });
     }); // livequery
-
 
     $('.restart-tap-counter').livequery((i, el)=> {
         $(el).on('click', (event) => {
@@ -122,6 +133,25 @@ $(function() {
             $tapCounter.text("0");
         });
     }); // livequery
+
+    $('.alt-label-tap-counter').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+            const $timer = utility.get$Timer(uid);
+            var goalLabelResponse = parseInt(prompt("🏁 Goal taps (Optional) eg. 6?"));
+            var oddLabelResponse = prompt("1 Odd label (Optional)?");
+            var evenLabelResponse = prompt("2 Even label (Optional)?");
+            $timer.find(".tap-goal").text(goalLabelResponse?"/"+goalLabelResponse:"");
+            timer.tapping.evenLabel = evenLabelResponse?evenLabelResponse:"";
+            timer.tapping.oddLabel = oddLabelResponse?oddLabelResponse:"";
+        });
+    }); // livequery
+
+    function setTapCounterLabels(event) {
+        var instance = here(event);
+
+    }
     
 
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
