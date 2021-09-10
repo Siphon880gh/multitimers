@@ -120,11 +120,18 @@ $(function() {
 
     $('.restart-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            // restart model time state
-            const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
-            timer.current = 0;
-            timer.elapsed = false;
+            // Restart model time state
+            function restartTimerAtModel() {
+                const uid = utility.getUIDfromEvent(event);
+                const timer = timers[uid];
+                timer.current = 0;
+                timer.elapsed = false;
+            }
+
+            // If you press restart timer at the exact time the second increases, it would have been overridden and ignored. Repeat 100ms after:
+            restartTimerAtModel();
+            setTimeout(restartTimerAtModel, 100);
+
         });
     }); // livequery
 
