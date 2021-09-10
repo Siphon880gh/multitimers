@@ -432,6 +432,14 @@ function shorthandSetAlarm($alarmSetter) {
     $mm.text(mins<10?`0${mins}`:mins);
     $ss.text(secs<10?`0${secs}`:secs);
 
+    // Make sure timer starts if haven't after adding shorthand
+    let isNotStarted = $timer.find(".fa-pause.hide").length>0;
+    if(isNotStarted) {
+        $timer.find(".fa-pause").removeClass("hide");
+        $timer.find(".fa-play").addClass("hide");
+        timer.running = true;
+    }
+
     return totalSecs;
 
 } // shorthandSetAlarm
