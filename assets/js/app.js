@@ -169,11 +169,6 @@ $(function() {
         });
     }); // livequery
 
-    function setTapCounterLabels(event) {
-        var instance = here(event);
-
-    }
-    
 
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
@@ -387,8 +382,28 @@ window.timers = {
  * @returns total secs
  */
 function shorthandSetAlarm($alarmSetter) {
-    let line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h / 1h 1m 1s / 120 secs / 2 hours / 2 mins):");
+    let line = prompt("Enter your shorthand alarm (eg. 1h / 1h 3m / 1.5h / 1h 1m 1s / 120 secs / 2 hours / 2 mins).\n\nYou can add 'rep' if you want to restart the timer whenever the alarm is reached (eg. 1h rep):\n");
     if(line===null || line===undefined) return;
+
+    // Make case insensitive
+    line = line.toLowerCase();
+
+    // Will be used
+    const $timer = $alarmSetter.closest(".timer");
+    const uid = $timer.attr("data-uid");
+    const timer = timers[uid];
+
+    // Repeat timer each time you reach alarm? The shorthand would have 'rep' 
+    let isRepeatMode = line.includes("rep");
+    if(isRepeatMode) {
+        // Active loop timer button
+        let $loopTimeBtn = $timer.find(".loop-timer");
+        $loopTimeBtn.addClass("active");
+
+        // Reflect timer looping on the model
+        timer.looping = true;
+    }
+
     line = line.toLowerCase();
     line = line.replaceAll("hours", "h").replaceAll("hour", "h").replaceAll("hr", "h").replaceAll("h", "h,");
     line = line.replaceAll("mins", "m").replaceAll("min", "m").replaceAll("m", "m,");
