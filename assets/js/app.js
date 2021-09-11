@@ -118,6 +118,19 @@ $(function() {
         });
     }); // livequery
 
+    $('.repeat-beep').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            // Toggle DOM state to highlighted
+            var $eventEl = $(event.target);
+            $eventEl.toggleClass("active");
+
+            // Toggle model looping state
+            const uid = utility.getUIDfromEvent(event);
+            const timer = timers[uid];
+            timer.repeatBeep = !timer.repeatBeep;
+        });
+    }); // livequery
+
     $('.restart-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
             // Restart model time state
@@ -187,9 +200,10 @@ $(function() {
                 const uid = timer.uid;
                 timer.current++;
 
-                if(timer.current>=timer.alarm && !timer.elapsed && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
+                if(timer.current>=timer.alarm && (timer.repeatBeep || !timer.elapsed) && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
                     if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
                         beep();
+                    // } else if(!timer.elapsed) { // alarm with speech will always be only once
                     } else {
                         beepNThenWord(timer.alarmTimes, timer.alarmAnnounce)
                     }
@@ -299,6 +313,7 @@ class Timer {
             uid,
             title: "",
             elapsed: false, // prevents repeated beeps because we want non-obtrusive
+            repeatBeep: false, // new option to want repeated beeps
             running: false,
             looping: false,
             current: 0,
