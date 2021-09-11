@@ -26,6 +26,3 @@ By Weng Fei Fung. Simple multiple countups with alarms that work in the backgrou
 
 ## :minidisc: Installation and Usage:
 Run as a HTML file or server file. No needed hands-on setup.
-
-## :crystal_ball: Future version
-- PWA application for offline use and native app download
