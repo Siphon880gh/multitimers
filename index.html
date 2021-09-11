@@ -44,8 +44,23 @@
                 <a href="https://www.youtube.com/channel/UCg1O9uttSv3ZBzd1iep25Ig/" target="_blank"><i class="fab fa-youtube"></i></a>
             </div>
 
-            <p>Add as many countup timers as you want. You can turn the countup into an alarm. You can use a tap counter with each timer. Name the timers. Put the tab away in the background and it will still work.
-                <a href="javascript:void(0);" onclick="$(this).next().toggleClass('hide');"><i class="fa fa-question"></i></a><span class="hide"> I coded the alarms to be non-obtrusive so that they do not continually beep until you're forced to interact with the alarm. A timer will stay red to let you know the alarm has elapsed. If you find that it's too non-obtrusive, you can have a timer beep multiple times, then announce a word or sentence.</span></p>
+            <p>Add as many countup timers as you want. You can turn the countup into an alarm. You can use a tap counter with each timer that beeps once, beeps until addressed, or a mix of beeping and saying words. Name the timers. Put the tab away in the
+                background and it will still work.
+            </p>
+
+            <a href="javascript:void(0);" onclick="$(this).next().toggleClass('hide');"><i class="fa fa-question"></i></a>
+            <div class="hide">
+                <p>I originally made the alarms to be non-obtrusive so unlike traditional alarms, these don't continually beep, and don't force you to snooze or address the alarm. A timer will stay red to let you know the alarm has elapsed so you can take
+                    a glance at which alarms are done. You can have it beep everytime the amount of time passes by having the timer restart when it beeps with the <i class="fa fa-history"></i> button. If you find that it's too non-obtrusive and you don't
+                    realize the alarm went off, you can have a timer beep multiple times, then announce a word or sentence. You can go back to a traditional alarm by having it beep repeatedly until addressed with the <i class="fa fa-bullhorn"></i> button.
+                </p>
+                <div>Legend:</div>
+                <span>
+                    - The <i class="fa fa-play"></i> / <i class="fa fa-pause" style="color:black;"></i> / <i class="fa fa-backward"></i> are to play/pause/restart.<br/>
+                    - The <i class="fa fa-history"></i> is to restart the timer when alarm is reached.<br/>
+                    - The <i class="fa fa-bullhorn"></i> is to repeat the beep when the alarm is reached until you restart the timer.
+                </span>
+            </div>
         </div>
 
         <hr id="main-hr" />
