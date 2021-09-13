@@ -1,5 +1,4 @@
-// Create one timer at start
-$(function() {
+$(function initEventListeners() {
     // Event listeners (evL)
     // - evL: Create new button
     $("#create-new").livequery( (i, el)=>{
@@ -260,47 +259,8 @@ $(function() {
         } // filter out timers only
     }, 100);
 
-    $("#create-new").click();
 });
 
-/**
- * Utility for the other structures
- */
-const utility = {
-    $layout: $("main"),
-
-    isLooping: (uid) => {
-        const timer = timers[uid];
-        return timer.looping;
-    },
-
-    // convert total secs to hrs, mins, secs
-    cvtTotalSecsToTimeComp: (totalSecs) => {
-        var mins = 0, hrs = 0, secs = 0;
-        hrs = parseFloat(totalSecs/60/60);
-        mins = parseFloat((hrs - parseInt(hrs))*60);
-        secs = parseFloat((mins - parseInt(mins))*60);
-        // console.log({totalSecs, hrs, mins, secs}); //
-        hrs = Math.round(hrs);
-        mins = Math.round(mins);
-        secs = Math.round(secs);
-        // console.log({totalSecs, hrs, mins, secs}); //
-        
-        return { hrs, mins, secs }
-    },
-    get$Timer: (uid) => {
-        return $(`[data-uid="${uid}"]`);
-    },
-    cancelEnter: (event) => {
-        if(event.keyCode===13) { 
-            event.stopPropagation(); 
-            event.preventDefault(); 
-        }
-    },
-    getUIDfromEvent: (event)=> {
-        return $(event.target).closest('[data-uid]').attr('data-uid');
-    }
-}
 
 /**
  * Timer object gets pushed to timers array
@@ -343,58 +303,62 @@ class $Timer {
     }
 }
 
-/**
- * timers have methods and elements
- */
-window.timers = {
-    pauseTimer: function(uid, event) {
-        this[uid].running = false;
-    },
-    resumeTimer: function(uid, event) {
-        this[uid].running = true;
-    },
-    removeAlarm: function(uid, event) {
-        let timer = this[uid];
-        let $timer = utility.get$Timer(uid);
+$(function timerModelsAndHelpers() {
 
-        let title = $timer.find(".title").text();
-        title = title.length?title:"<Untitled>";
+    /**
+     * timers have methods and elements
+     */
+    window.timers = {
+        pauseTimer: function(uid, event) {
+            this[uid].running = false;
+        },
+        resumeTimer: function(uid, event) {
+            this[uid].running = true;
+        },
+        removeAlarm: function(uid, event) {
+            let timer = this[uid];
+            let $timer = utility.get$Timer(uid);
 
-        if(confirm(`You sure you want to remove timer ${title}?`)) {
+            let title = $timer.find(".title").text();
+            title = title.length?title:"<Untitled>";
 
-            // Remove model and view
-            delete timers[uid];
-            $timer.remove();
+            if(confirm(`You sure you want to remove timer ${title}?`)) {
+
+                // Remove model and view
+                delete timers[uid];
+                $timer.remove();
+            }
+            
+            event.stopPropagation();
+        },
+
+        updateTitle: function(uid, event) {
+            let timer = this[uid];
+            let $timer = utility.get$Timer(uid);
+
+            let title = $timer.find(".timer-title").text();
+            title = title.length?title:"<Untitled>";
+
+            timer.title = title;
+
+            event.stopPropagation();
+        },
+
+        updateAlarm: function(uid, event) {
+            let timer = this[uid];
+            let $timer = $(`[data-uid="${uid}"]`);
+
+            let $alarm = $timer.find(".alarm-container");
+            let secs = (parseInt($alarm.find(".hh").text())*60*60) + (parseInt($alarm.find(".mm").text())*60) + parseInt($alarm.find(".ss").text());
+            timer.alarm = secs;
+
+            event.stopPropagation();
         }
-        
-        event.stopPropagation();
-    },
 
-    updateTitle: function(uid, event) {
-        let timer = this[uid];
-        let $timer = utility.get$Timer(uid);
-
-        let title = $timer.find(".timer-title").text();
-        title = title.length?title:"<Untitled>";
-
-        timer.title = title;
-
-        event.stopPropagation();
-    },
-
-    updateAlarm: function(uid, event) {
-        let timer = this[uid];
-        let $timer = $(`[data-uid="${uid}"]`);
-
-        let $alarm = $timer.find(".alarm-container");
-        let secs = (parseInt($alarm.find(".hh").text())*60*60) + (parseInt($alarm.find(".mm").text())*60) + parseInt($alarm.find(".ss").text());
-        timer.alarm = secs;
-
-        event.stopPropagation();
+        // The rest is a map
     }
 
-    // The rest is a map
-}
+})
 
 /**
  * 
@@ -465,3 +429,53 @@ function shorthandSetAlarm($alarmSetter) {
     return totalSecs;
 
 } // shorthandSetAlarm
+
+
+// See if there were old timers from a previous session
+$(function initPersist() {
+    var timersExist = localStorage.getItem("multitimers__timers");
+    if(timersExist) {
+        window.timers = timersExist;
+    } else {
+        $("#create-new").click();
+    }
+});
+
+/**
+ * Utility for the other structures
+ */
+const utility = {
+    $layout: $("main"),
+
+    isLooping: (uid) => {
+        const timer = timers[uid];
+        return timer.looping;
+    },
+
+    // convert total secs to hrs, mins, secs
+    cvtTotalSecsToTimeComp: (totalSecs) => {
+        var mins = 0, hrs = 0, secs = 0;
+        hrs = parseFloat(totalSecs/60/60);
+        mins = parseFloat((hrs - parseInt(hrs))*60);
+        secs = parseFloat((mins - parseInt(mins))*60);
+        // console.log({totalSecs, hrs, mins, secs}); //
+        hrs = Math.round(hrs);
+        mins = Math.round(mins);
+        secs = Math.round(secs);
+        // console.log({totalSecs, hrs, mins, secs}); //
+        
+        return { hrs, mins, secs }
+    },
+    get$Timer: (uid) => {
+        return $(`[data-uid="${uid}"]`);
+    },
+    cancelEnter: (event) => {
+        if(event.keyCode===13) { 
+            event.stopPropagation(); 
+            event.preventDefault(); 
+        }
+    },
+    getUIDfromEvent: (event)=> {
+        return $(event.target).closest('[data-uid]').attr('data-uid');
+    }
+}
