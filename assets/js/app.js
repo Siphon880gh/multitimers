@@ -25,7 +25,7 @@ $(function initEventListeners() {
     $('.remove-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
             const uid = utility.getUIDfromEvent(event);
-            timers.removeAlarm(uid, event);
+            timers.removeTimer(uid, event);
         });
     }); // livequery
 
@@ -34,7 +34,7 @@ $(function initEventListeners() {
         $(el).on('click', (event) => {
             const $eventEl = $(event.target);
             const uid = utility.getUIDfromEvent(event);
-            const timerModel = timers[uid];
+            const timerModel = timers[0][uid];
 
             // Set DOM
             const $alarmSetter = $eventEl.closest(".input"); 
@@ -42,6 +42,7 @@ $(function initEventListeners() {
 
             // Set Model
             timerModel.alarm = totalSecs;
+            timers.updatePersist();
             
         });
     }); // livequery
@@ -59,21 +60,15 @@ $(function initEventListeners() {
 
     $('.alarm-times').livequery((i, el)=> {
         $(el).on('change', (event) => {
-            var $eventEl = $(event.target);
             const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
-
-            timer.alarmTimes = parseInt($eventEl.val());
+            
+            timers.updateAlarmTimes(uid, event);
         });
     }); // livequery
     
     $('.announce').livequery((i, el)=> {
         $(el).on('change', (event) => {
-            var $eventEl = $(event.target);
-            const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
-
-            timer.alarmAnnounce = $eventEl.val();
+            timers.updateAnnounce(uid, event);
         });
     }); // livequery
 
@@ -112,37 +107,22 @@ $(function initEventListeners() {
 
             // Toggle model looping state
             const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
+            const timer = timers[0][uid];
             timer.looping = !timer.looping;
         });
     }); // livequery
 
     $('.repeat-beep').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            // Toggle DOM state to highlighted
-            var $eventEl = $(event.target);
-            $eventEl.toggleClass("active");
-
-            // Toggle model looping state
             const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
-            timer.repeatBeep = !timer.repeatBeep;
+            timers.updateRepeatBeep(uid, event);
         });
     }); // livequery
 
     $('.restart-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            // Restart model time state
-            function restartTimerAtModel() {
-                const uid = utility.getUIDfromEvent(event);
-                const timer = timers[uid];
-                timer.current = 0;
-                timer.elapsed = false;
-            }
-
-            // If you press restart timer at the exact time the second increases, it would have been overridden and ignored. Repeat 100ms after:
-            restartTimerAtModel();
-            setTimeout(restartTimerAtModel, 100);
+            const uid = utility.getUIDfromEvent(event);
+            timers.updateLoopTimer(uid, event);
 
         });
     }); // livequery
@@ -158,7 +138,7 @@ $(function initEventListeners() {
             // Even / Odd labeling if appropriate
             const uid = utility.getUIDfromEvent(event);
             $timer = utility.get$Timer(uid);
-            timer = timers[uid];
+            timer = timers[0][uid];
             if(nextTapCount%2==0) {
                 $timer.find(".tap-counter-label").text(timer.tapping.evenLabel);
             } else {
@@ -177,26 +157,28 @@ $(function initEventListeners() {
     $('.alt-label-tap-counter').livequery((i, el)=> {
         $(el).on('click', (event) => {
             const uid = utility.getUIDfromEvent(event);
-            const timer = timers[uid];
-            const $timer = utility.get$Timer(uid);
+            const timer = timers[0][uid];
             var goalLabelResponse = parseInt(prompt("🏁 Goal taps (Optional) eg. 6?"));
             var oddLabelResponse = prompt("1 Odd label (Optional)?");
             var evenLabelResponse = prompt("2 Even label (Optional)?");
-            $timer.find(".tap-goal").text(goalLabelResponse?"/"+goalLabelResponse:"");
-            timer.tapping.evenLabel = evenLabelResponse?evenLabelResponse:"";
-            timer.tapping.oddLabel = oddLabelResponse?oddLabelResponse:"";
+            timer.updateTappingLabels(uid, timer, {
+             evenLabelResponse,
+             goalLabelResponse,
+             oddLabelResponse, 
+            });
         });
     }); // livequery
+});
 
+$(function setPoller() {
 
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
     setInterval(()=>{
         // Running timers will increment timers
-        for(key in timers) {
-            if(typeof timers[key].running!=="undefined" && timers[key].running) {
+        for(uid in timers[0]) {
+            const timer = timers[0][uid];
+            if(timer.running) {
                 // Updates model time
-                const timer = timers[key];
-                const uid = timer.uid;
                 timer.current++;
 
                 if(timer.current>=timer.alarm && (timer.repeatBeep || !timer.elapsed) && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
@@ -219,28 +201,27 @@ $(function initEventListeners() {
                 } // if in loop mode
             
             } // running timers only
-        } // filter out timers only
+        } // get timers only
     }, 1000);
 
     // Normal setInterval that can access DOM only runs when tab is active
     setInterval(()=>{
         // Running timers will update timer DOMs
-        for(key in timers) {
-            if(typeof timers[key].running!=="undefined" && timers[key].running) {
-                const timer = timers[key];
+        for(uid in timers[0]) {
+            const timer = timers[0][uid];
+            if(timer.running) {
                 const uid = timer.uid;
                 const $timer = utility.get$Timer(uid);
 
                 // Update timemark
                 let totalSecs = timer.current;
-                const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
+                const {hh, mm, ss} = utility.cvtTotalSecsToTimeComp(totalSecs);
                 const $timemark = $timer.find(".timemark-container .output");
-                const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
-                // console.log({hrs,mins,secs});
                 
-                $hh.text(hrs<10?`0${hrs}`:hrs);
-                $mm.text(mins<10?`0${mins}`:mins);
-                $ss.text(secs<10?`0${secs}`:secs);
+                const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
+                $hh.text(hh);
+                $mm.text(mm);
+                $ss.text(ss);
 
                 // Red timer element if time elapsed
                 let alarmSecs = timer.alarm;
@@ -256,11 +237,9 @@ $(function initEventListeners() {
                     } // if out
                 }
             } // running timers only
-        } // filter out timers only
+        } // get timers only
     }, 100);
-
-});
-
+})
 
 /**
  * Timer object gets pushed to timers array
@@ -271,15 +250,15 @@ class Timer {
         const uid = Date.now() + "";
         const timer = {
             uid,
+            alarm: 0,
+            alarmTimes: 1,
+            alarmAnnounce: "",
             title: "",
             elapsed: false, // prevents repeated beeps because we want non-obtrusive
             repeatBeep: false, // new option to want repeated beeps
             running: false,
             looping: false,
             current: 0,
-            alarm: 0,
-            alarmTimes: 1,
-            alarmAnnounce: "",
             tapping: {
                 evenLabel: "",
                 oddLabel: ""
@@ -287,8 +266,9 @@ class Timer {
         }
 
         // Update model
-        window.timers[uid] = timer;
+        window.timers[0][uid] = timer;
         new $Timer(uid);
+        window.timers.updatePersist();
     }
 } // class Timer
 
@@ -299,7 +279,9 @@ class $Timer {
     constructor(uid) {
         let template = $("template").html();
         template = template.replaceAll("__uid__", uid);
-        utility.$layout.append(template);
+        let $timer = $(template);
+        utility.$layout.append($timer);
+        return $timer;
     }
 }
 
@@ -309,14 +291,19 @@ $(function timerModelsAndHelpers() {
      * timers have methods and elements
      */
     window.timers = {
+        updatePersist: function() {
+            localStorage.setItem("multitimers__timers", JSON.stringify(window.timers[0]));
+        },
         pauseTimer: function(uid, event) {
-            this[uid].running = false;
+            this[0][uid].running = false;
+            this.updatePersist();
         },
         resumeTimer: function(uid, event) {
-            this[uid].running = true;
+            this[0][uid].running = true;
+            this.updatePersist();
         },
-        removeAlarm: function(uid, event) {
-            let timer = this[uid];
+        removeTimer: function(uid, event) {
+            let timer = this[0][uid];
             let $timer = utility.get$Timer(uid);
 
             let title = $timer.find(".title").text();
@@ -325,15 +312,16 @@ $(function timerModelsAndHelpers() {
             if(confirm(`You sure you want to remove timer ${title}?`)) {
 
                 // Remove model and view
-                delete timers[uid];
+                delete timers[0][uid];
                 $timer.remove();
             }
             
             event.stopPropagation();
+            this.updatePersist();
         },
 
         updateTitle: function(uid, event) {
-            let timer = this[uid];
+            let timer = this[0][uid];
             let $timer = utility.get$Timer(uid);
 
             let title = $timer.find(".timer-title").text();
@@ -342,10 +330,11 @@ $(function timerModelsAndHelpers() {
             timer.title = title;
 
             event.stopPropagation();
+            this.updatePersist();
         },
 
         updateAlarm: function(uid, event) {
-            let timer = this[uid];
+            let timer = this[0][uid];
             let $timer = $(`[data-uid="${uid}"]`);
 
             let $alarm = $timer.find(".alarm-container");
@@ -353,9 +342,76 @@ $(function timerModelsAndHelpers() {
             timer.alarm = secs;
 
             event.stopPropagation();
-        }
+            this.updatePersist();
+        },
 
-        // The rest is a map
+        updateAlarmTimes: function(uid, event) {
+            let timer = this[0][uid];
+            var $eventEl = $(event.target);
+            timer.alarmTimes = parseInt($eventEl.val());
+
+            event.stopPropagation();
+            this.updatePersist();
+        },
+
+        updateAnnounce: function(uid, event) {
+            let timer = this[0][uid];
+            var $eventEl = $(event.target);
+            timer.alarmAnnounce = $eventEl.val();
+
+            event.stopPropagation();
+            this.updatePersist();
+        },
+
+        updateLoopTimer: function(uid, event) {
+            let timer = this[0][uid];
+
+            // Toggle DOM state to highlighted
+            var $eventEl = $(event.target);
+
+            // Restart model time state
+            function restartTimerAtModel() {
+                timer.current = 0;
+                timer.elapsed = false;
+            }
+
+            // If you press restart timer at the exact time the second increases, it would have been overridden and ignored. Repeat 100ms after:
+            restartTimerAtModel();
+            setTimeout(restartTimerAtModel, 100);
+            
+            event.stopPropagation();
+            // this.updatePersist(); // not necessary to persist
+        },
+
+        updateRepeatBeep: function(uid, event) {
+            let timer = this[0][uid];
+
+            // Toggle DOM state to highlighted
+            var $eventEl = $(event.target);
+            $eventEl.toggleClass("active");
+
+            // Toggle model looping state
+            timer.repeatBeep = $eventEl.hasClass("active");
+
+            event.stopPropagation();
+            this.updatePersist();
+        },
+        updateTappingLabels: function(uid, event, context) {
+            let {goalLabelResponse, oddLabelResponse, evenLabelResponse} = context;
+            let timer = this[0][uid];
+            const $timer = utility.get$Timer(uid);
+            
+            $timer.find(".tap-goal").text(goalLabelResponse?"/"+goalLabelResponse:"");
+            timer.tapping.evenLabel = evenLabelResponse?evenLabelResponse:"";
+            timer.tapping.oddLabel = oddLabelResponse?oddLabelResponse:"";
+
+            event.stopPropagation();
+            this.updatePersist();
+        },
+
+
+        // The rest is a map of timer models
+        0: {}
     }
 
 })
@@ -377,7 +433,7 @@ function shorthandSetAlarm($alarmSetter) {
     // Will be used
     const $timer = $alarmSetter.closest(".timer");
     const uid = $timer.attr("data-uid");
-    const timer = timers[uid];
+    const timer = timers[0][uid];
 
     // Repeat timer each time you reach alarm? The shorthand would have 'rep' 
     let isRepeatMode = line.includes("rep");
@@ -408,15 +464,15 @@ function shorthandSetAlarm($alarmSetter) {
             totalSecs += parseFloat(subject);
     }
 
-    const {hrs, mins, secs} = utility.cvtTotalSecsToTimeComp(totalSecs);
+    const {hh, mm, ss} = utility.cvtTotalSecsToTimeComp(totalSecs);
 
     const $ss = $alarmSetter.find(".ss"),
         $mm = $alarmSetter.find(".mm"),
         $hh = $alarmSetter.find(".hh");
 
-    $hh.text(hrs<10?`0${hrs}`:hrs);
-    $mm.text(mins<10?`0${mins}`:mins);
-    $ss.text(secs<10?`0${secs}`:secs);
+    $hh.text(hh);
+    $mm.text(mm);
+    $ss.text(ss);
 
     // Make sure timer starts if haven't after adding shorthand
     let isNotStarted = $timer.find(".fa-pause.hide").length>0;
@@ -433,9 +489,37 @@ function shorthandSetAlarm($alarmSetter) {
 
 // See if there were old timers from a previous session
 $(function initPersist() {
-    var timersExist = localStorage.getItem("multitimers__timers");
+    var timersExist = JSON.parse(localStorage.getItem("multitimers__timers"));
     if(timersExist) {
-        window.timers = timersExist;
+        window.timers[0] = timersExist;
+        for(uid in timersExist) {
+            const timer = timersExist[uid]
+
+            // Countdowns to 0
+            timer.elapsed = false;
+            timer.running = false;
+            timer.current = 0;
+
+            // Restore DOM - Loop Time and Repeat Beep buttons
+            const {looping, repeatBeep} = timer;
+            const $timer = new $Timer(uid);
+            
+            if(looping) $timer.find(".loop-timer").addClass("active");
+            if(repeatBeep) $timer.find(".repeat-beep").addClass("active");
+
+            // Restore DOM - Alarm time
+            let $alarm = $timer.find(".alarm-container");
+            let {hh,mm,ss} = utility.cvtTotalSecsToTimeComp(timer.alarm);
+
+            $alarm.find(".hh").text(hh);
+            $alarm.find(".mm").text(mm);
+            $alarm.find(".ss").text(ss);
+
+            // Restore DOM - Title
+            if(timer.title.length)
+                $timer.find(".timer-title").text(timer.title);
+        } // every timer
+
     } else {
         $("#create-new").click();
     }
@@ -448,23 +532,26 @@ const utility = {
     $layout: $("main"),
 
     isLooping: (uid) => {
-        const timer = timers[uid];
+        const timer = timers[0][uid];
         return timer.looping;
     },
 
-    // convert total secs to hrs, mins, secs
+    // Convert total secs to hrs, mins, secs
     cvtTotalSecsToTimeComp: (totalSecs) => {
-        var mins = 0, hrs = 0, secs = 0;
-        hrs = parseFloat(totalSecs/60/60);
-        mins = parseFloat((hrs - parseInt(hrs))*60);
-        secs = parseFloat((mins - parseInt(mins))*60);
-        // console.log({totalSecs, hrs, mins, secs}); //
+        let hrs = parseFloat(totalSecs/60/60);
+        let mins = parseFloat((hrs - parseInt(hrs))*60);
+        let secs = parseFloat((mins - parseInt(mins))*60);
+        
         hrs = Math.round(hrs);
         mins = Math.round(mins);
         secs = Math.round(secs);
-        // console.log({totalSecs, hrs, mins, secs}); //
         
-        return { hrs, mins, secs }
+        let hh = (""+hrs).padStart(2, "0");
+        let mm = (""+mins).padStart(2, "0");
+        let ss = (""+secs).padStart(2, "0");
+        
+        // console.log( { hrs, mins, secs, hh, mm, ss })
+        return { hrs, mins, secs, hh, mm, ss }
     },
     get$Timer: (uid) => {
         return $(`[data-uid="${uid}"]`);
