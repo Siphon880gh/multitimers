@@ -101,14 +101,8 @@ $(function initEventListeners() {
 
     $('.loop-timer').livequery((i, el)=> {
         $(el).on('click', (event) => {
-            // Toggle DOM state to highlighted
-            var $eventEl = $(event.target);
-            $eventEl.toggleClass("active");
-
-            // Toggle model looping state
             const uid = utility.getUIDfromEvent(event);
-            const timer = timers[0][uid];
-            timer.looping = !timer.looping;
+            timers.updateLoopTimer(uid, event);
         });
     }); // livequery
 
@@ -119,11 +113,23 @@ $(function initEventListeners() {
         });
     }); // livequery
 
-    $('.restart-timer').livequery((i, el)=> {
+    $('.restart-time').livequery((i, el)=> {
         $(el).on('click', (event) => {
             const uid = utility.getUIDfromEvent(event);
-            timers.updateLoopTimer(uid, event);
+            let timer = window.timers[0][uid];
 
+            // Toggle DOM state to highlighted
+            var $eventEl = $(event.target);
+
+            // Restart model time state
+            function restartTimeAtModel() {
+                timer.current = 0;
+                timer.elapsed = false;
+            }
+
+            // If you press restart timer at the exact time the second increases, it would have been overridden and ignored. Repeat 100ms after:
+            restartTimeAtModel();
+            setTimeout(restartTimeAtModel, 100);
         });
     }); // livequery
 
@@ -158,16 +164,32 @@ $(function initEventListeners() {
         $(el).on('click', (event) => {
             const uid = utility.getUIDfromEvent(event);
             const timer = timers[0][uid];
-            var goalLabelResponse = parseInt(prompt("🏁 Goal taps (Optional) eg. 6?"));
-            var oddLabelResponse = prompt("1 Odd label (Optional)?");
-            var evenLabelResponse = prompt("2 Even label (Optional)?");
-            timer.updateTappingLabels(uid, timer, {
-             evenLabelResponse,
-             goalLabelResponse,
-             oddLabelResponse, 
+            $timer = utility.get$Timer(uid);
+            var goalNumber = parseInt(prompt("🏁 Goal taps (Optional, eg. 6)?"));
+            var oddLabel = prompt("1 Odd label (Optional)?");
+            var evenLabel = prompt("2 Even label (Optional)?");
+
+            goalNumber = !isNaN(parseInt(goalNumber))?parseInt(goalNumber):"";
+            oddLabel = oddLabel?oddLabel:"";
+            evenLabel = evenLabel?evenLabel:"";
+            timers.updateTappingLabels(uid, timer, {
+                goalNumber,
+                oddLabel,
+                evenLabel, 
             });
+            $timer.find(".tap-goal").text(goalNumber);
         });
     }); // livequery
+
+
+    $('.tap-goal').livequery((i, el)=> {
+        $(el).on('click', (event) => {
+            const $eventEl = $(event.target);
+            $eventEl.prev().click();
+            event.stopPropagation();
+        });
+    }); // livequery
+    
 });
 
 $(function setPoller() {
@@ -260,8 +282,9 @@ class Timer {
             looping: false,
             current: 0,
             tapping: {
-                evenLabel: "",
-                oddLabel: ""
+                goalNumber: "", // poss: "", <int>
+                oddLabel: "",
+                evenLabel: ""
             }
         }
 
@@ -364,23 +387,16 @@ $(function timerModelsAndHelpers() {
         },
 
         updateLoopTimer: function(uid, event) {
-            let timer = this[0][uid];
-
             // Toggle DOM state to highlighted
             var $eventEl = $(event.target);
+            $eventEl.toggleClass("active");
 
-            // Restart model time state
-            function restartTimerAtModel() {
-                timer.current = 0;
-                timer.elapsed = false;
-            }
+            // Toggle model looping state
+            const timer = timers[0][uid];
+            timer.looping = !timer.looping;
 
-            // If you press restart timer at the exact time the second increases, it would have been overridden and ignored. Repeat 100ms after:
-            restartTimerAtModel();
-            setTimeout(restartTimerAtModel, 100);
-            
             event.stopPropagation();
-            // this.updatePersist(); // not necessary to persist
+            this.updatePersist();
         },
 
         updateRepeatBeep: function(uid, event) {
@@ -397,15 +413,14 @@ $(function timerModelsAndHelpers() {
             this.updatePersist();
         },
         updateTappingLabels: function(uid, event, context) {
-            let {goalLabelResponse, oddLabelResponse, evenLabelResponse} = context;
+            let {goalNumber, oddLabel, evenLabel} = context;
             let timer = this[0][uid];
             const $timer = utility.get$Timer(uid);
             
-            $timer.find(".tap-goal").text(goalLabelResponse?"/"+goalLabelResponse:"");
-            timer.tapping.evenLabel = evenLabelResponse?evenLabelResponse:"";
-            timer.tapping.oddLabel = oddLabelResponse?oddLabelResponse:"";
+            timer.tapping.goalNumber = !isNaN(parseInt(goalNumber))?parseInt(goalNumber):"";
+            timer.tapping.oddLabel = oddLabel?oddLabel:"";
+            timer.tapping.evenLabel = evenLabel?evenLabel:"";
 
-            event.stopPropagation();
             this.updatePersist();
         },
 
@@ -524,6 +539,10 @@ $(function initPersist() {
 
             // Restore DOM - Beep number
             $alarm.find(".alarm-times")[0].selectedIndex = timer.alarmTimes-1;
+
+            // Restore tapping goal label
+            let {goalNumber} = timer.tapping;
+            $timer.find(".tap-goal").text(goalNumber);
 
         } // every timer
 

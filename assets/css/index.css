@@ -45,7 +45,7 @@ aside {
 }
 
 .hoverable:hover {
-    color: green;
+    color: green !important;
     cursor: pointer;
 }
 
@@ -76,6 +76,10 @@ aside {
     display: none;
 }
 
+.timer {
+    margin: 0 5px 5px 0;
+}
+
 .timer-controls {
     margin: 10px 0;
     text-align: center;
@@ -104,8 +108,11 @@ aside {
 }
 
 .tap-goal {
-    color: gray;
     font-weight: 200;
+}
+
+.tap-goal:not(:empty)::before {
+    content: "/";
 }
 
 .tap-counter-label {
