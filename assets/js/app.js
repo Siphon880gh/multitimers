@@ -217,7 +217,7 @@ $(function setPoller() {
                 let totalSecs = timer.current;
                 const {hh, mm, ss} = utility.cvtTotalSecsToTimeComp(totalSecs);
                 const $timemark = $timer.find(".timemark-container .output");
-                
+
                 const $hh = $timemark.find(".hh"), $mm = $timemark.find(".mm"), $ss = $timemark.find(".ss");
                 $hh.text(hh);
                 $mm.text(mm);
@@ -518,6 +518,13 @@ $(function initPersist() {
             // Restore DOM - Title
             if(timer.title.length)
                 $timer.find(".timer-title").text(timer.title);
+
+            // Restore DOM - Announce text
+            $alarm.find(".announce").val(timer.alarmAnnounce);
+
+            // Restore DOM - Beep number
+            $alarm.find(".alarm-times")[0].selectedIndex = timer.alarmTimes-1;
+
         } // every timer
 
     } else {
