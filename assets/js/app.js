@@ -585,9 +585,13 @@ const utility = {
         let mins = parseFloat((hrs - parseInt(hrs))*60);
         let secs = parseFloat((mins - parseInt(mins))*60);
         
-        hrs = Math.round(hrs);
-        mins = Math.round(mins);
+        hrs = hrs>=1?Math.floor(hrs):0;
+        mins = mins>=1?Math.floor(mins):0;
         secs = Math.round(secs);
+        if(secs===60) {
+            secs = 0;
+            mins += 1;
+        }
         
         let hh = (""+hrs).padStart(2, "0");
         let mm = (""+mins).padStart(2, "0");
