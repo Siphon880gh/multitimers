@@ -557,6 +557,23 @@ $(function initPersist() {
 const utility = {
     $layout: $("main"),
 
+    testMinimized: ()=> {
+        function utter(word) {
+            var a = new SpeechSynthesisUtterance(); 
+            a.text = word; 
+            speechSynthesis.speak(a);
+        }
+
+        let sentence = "Minimize and hear countdown 3 2 1 good";
+        let words = sentence.split(" ");
+        for(let i=0;i<words.length; i++) {
+            let word = words[i];
+            setTimeout(()=>{
+                utter(word);
+            }, i*1000);
+        }
+    },
+
     isLooping: (uid) => {
         const timer = timers[0][uid];
         return timer.looping;
