@@ -564,14 +564,18 @@ const utility = {
             speechSynthesis.speak(a);
         }
 
-        let sentence = "Minimize and hear countdown 3 2 1 good";
+        let sentence = "Minimize and hear countdown to beep 3 2 1 and";
         let words = sentence.split(" ");
         for(let i=0;i<words.length; i++) {
             let word = words[i];
             setTimeout(()=>{
                 utter(word);
-            }, i*1000);
+            }, i*700);
         }
+
+        setTimeout(()=>{
+            beep();
+        }, (words.length+1)*700)
     },
 
     isLooping: (uid) => {
