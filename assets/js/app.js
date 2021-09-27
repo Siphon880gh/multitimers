@@ -329,8 +329,8 @@ $(function timerModelsAndHelpers() {
             let timer = this[0][uid];
             let $timer = utility.get$Timer(uid);
 
-            let title = $timer.find(".title").text();
-            title = title.length?title:"<Untitled>";
+            let title = $timer.find(".timer-title").text();
+            title = (title.length&&title!=="Title ")?title:"<Untitled>";
 
             if(confirm(`You sure you want to remove timer ${title}?`)) {
 
