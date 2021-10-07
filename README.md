@@ -7,14 +7,14 @@
 
 :page_facing_up: Description:
 ---
-By Weng Fei Fung. Simple multiple countups with alarms that work in the background too. Customize alarms with number of beeps and text-to-speech announcements. With tap counter. This is version 2 which allows countups and timers to work in the background as an inactive tab, and had required the code to be completely reworked.
+By Weng Fei Fung. Simple multiple countups with alarms that can work in the background. Customize alarms with number of beeps and text-to-speech announcements. With tap counter. This is version 2 which allows countups and timers to work in the background as an inactive tab, and had required the code to be completely reworked.
 
 :open_file_folder: Table of Contents:
 ---
 - [Description](#description)
+- [Preview](#computer-live-deployment)
 - [Preview](#camera-preview)
 - [Installation and Usage](#minidisc-installation-and-usage)
-- [Future Version](#e-mail-meet-the-team)
 
 :computer: Live Deployment:
 ---
