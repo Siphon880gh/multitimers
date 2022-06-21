@@ -6,6 +6,10 @@
     color: red;
 }
 
+.fa-eye.active {
+    color: green;
+}
+
 .fa-pause {
     color: red;
 }
