@@ -31,11 +31,31 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png" type="image/png">
     <!-- apple-touch-icon-iphone-retin -->
 
+    <script>
+        // On loading, if user had toggled view to hidden and closed the browser before, we are reloading the persisted hiding preference
+        $(() => {
+            if (localStorage.getItem("multitimers__clean-mode") && localStorage.getItem("multitimers__clean-mode") === "1") {
+                toggleMinimalView(true);
+            }
+        })
+
+        function toggleMinimalView(setTo) {
+            if (typeof setTo !== "undefined" && setTo || !$(".fa-eye").hasClass("active")) {
+                $(".clean-mode-toggleable").hide();
+                $(".fa-eye").addClass("active");
+                localStorage.setItem("multitimers__clean-mode", "1");
+            } else {
+                $(".clean-mode-toggleable").show();
+                $(".fa-eye").removeClass("active");
+                localStorage.setItem("multitimers__clean-mode", "0");
+            }
+        }
+    </script>
 </head>
 
 <body>
     <div>
-        <a href="javascript:void(0)" onclick='$(".clean-mode-toggle").toggle(); $(this).toggleClass("active")' class="fa fa-eye" style="
+        <a href="javascript:void(0)" onclick='toggleMinimalView();' class="fa fa-eye" style="
                 position: fixed;
                 top: 5px;
                 right: 15px;
@@ -43,7 +63,7 @@
             "></a>
     </div>
     <div class="container">
-        <div class="clean-mode-toggle">
+        <div class="clean-mode-toggleable">
             <h1 id="title">Multiple Timers (Non-obtrusive)</h1>
             <div id="desc">
                 <div class="author-line">
@@ -74,9 +94,9 @@
         </div>
         <!-- clean mode -->
 
-        <hr id="main-hr" class="clean-mode-toggle" />
+        <hr id="main-hr" class="clean-mode-toggleable" />
         <div class="spacer-v"></div>
-        <aside class="clean-mode-toggle">
+        <aside class="clean-mode-toggleable">
             <button id="create-new">
                     <span class="fa fa-plus">&nbsp;New Timer</span>
                 </button>
