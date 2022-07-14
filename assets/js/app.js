@@ -11,7 +11,7 @@ $(function initEventListeners() {
     $(".timer-title").livequery( (i, el)=> {
         $(el).on("blur", (event) => {
             const uid = utility.getUIDfromEvent(event);
-            timers.updateTitle(uid, event)
+            timers.updateTitleAtModel(uid, event)
 
         }).on("click", (event)=>{
             document.execCommand("", false, null); 
@@ -70,6 +70,17 @@ $(function initEventListeners() {
         $(el).on('change', (event) => {
             timers.updateAnnounce(uid, event);
         });
+
+        $(el).on('blur', (event) => {
+            let announceWords = $(event.target).val();
+            let title = timers.getTitle(uid, event);
+            // debugger;
+            if(title==="<Untitled>")
+                timers.updateTitleView(uid, event, announceWords);
+                timers.updateTitleAtModel(uid, event);
+        });
+
+        
     }); // livequery
 
     // - evL: Play/Pause
@@ -330,7 +341,7 @@ $(function timerModelsAndHelpers() {
             let $timer = utility.get$Timer(uid);
 
             let title = $timer.find(".timer-title").text();
-            title = (title.length&&title!=="Title ")?title:"<Untitled>";
+            title = (title.length&&title.trim()!=="Title")?title:"<Untitled>";
 
             if(confirm(`You sure you want to remove timer ${title}?`)) {
 
@@ -343,12 +354,29 @@ $(function timerModelsAndHelpers() {
             this.updatePersist();
         },
 
-        updateTitle: function(uid, event) {
+
+        getTitle: function(uid, event) {
             let timer = this[0][uid];
             let $timer = utility.get$Timer(uid);
 
             let title = $timer.find(".timer-title").text();
-            title = title.length?title:"<Untitled>";
+            title = (title.length&&title.trim()!=="Title")?title:"<Untitled>";
+            return title;
+        },
+
+        updateTitleView: function(uid, event, newTitle) {
+            let timer = this[0][uid];
+            let $timer = utility.get$Timer(uid);
+
+            $timer.find(".timer-title").text(newTitle);
+        },
+
+        updateTitleAtModel: function(uid, event) {
+            let timer = this[0][uid];
+            let $timer = utility.get$Timer(uid);
+
+            let title = $timer.find(".timer-title").text();
+            title = (title.length&&title.trim()!=="Title")?title:"<Untitled>";
 
             timer.title = title;
 
