@@ -660,7 +660,7 @@ $(()=>{
             }});
             setTimeout(()=>{
                 $timeTile[0].dispatchEvent(mockClickEvent);
-            }, 500)
+            }, 800)
         });
     }
 })
