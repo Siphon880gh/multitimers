@@ -645,3 +645,22 @@ const utility = {
         return $(event.target).closest('[data-uid]').attr('data-uid');
     }
 }
+
+// Autoplay
+$(()=>{
+    let params = new URLSearchParams(window.location.search);
+    let isAutoplay = params.get("autoplay");
+    if(isAutoplay!==null) {
+        // alert("Autoplay detected")
+        $(".time-tile .fa-play").each((i, el) => {
+            let $timeTile = $(el);
+            var mockClickEvent = new CustomEvent('click', {
+            detail: {
+                target: $timeTile[0]
+            }});
+            setTimeout(()=>{
+                $timeTile[0].dispatchEvent(mockClickEvent);
+            }, 500)
+        });
+    }
+})
