@@ -203,14 +203,22 @@ $(function initEventListeners() {
     
 });
 
-function displayTimerTitleInAlert(timerTitle) {
+// function displayTimerTitleInAlert(timerTitle) {
 
-    if($("#alerts").is(":checked")) {
-        setTimeout(()=>{                        
-            alert(timerTitle);
-        },2000)
+//     if($("#alerts").is(":checked")) {
+//         setTimeout(()=>{                        
+//             alert(timerTitle);
+//         },2000)
+//     }
+// }
+function visualAlarm() {
+    if($("#visual-alarm").is(":checked")) {
+        $("body").css("background-color", "red")
     }
 }
+$("body").on("click", ()=>{
+    $("body").css("background-color", "inherit")
+})
 
 $(function setPoller() {
 
@@ -226,11 +234,13 @@ $(function setPoller() {
                 if(timer.current>=timer.alarm && (timer.repeatBeep || !timer.elapsed) && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
                     if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
                         beep();
-                        displayTimerTitleInAlert(timer.alarmAnnounce);
+                        // displayTimerTitleInAlert(timer.alarmAnnounce);
+                        visualAlarm();
                         // } else if(!timer.elapsed) { // alarm with speech will always be only once
                     } else {
                         beepNThenWord(timer.alarmTimes, timer.alarmAnnounce)
-                        displayTimerTitleInAlert(timer.alarmAnnounce);
+                        // displayTimerTitleInAlert(timer.alarmAnnounce);
+                        visualAlarm();
                     }
                     timer.elapsed = true;
                 }
