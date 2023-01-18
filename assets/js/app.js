@@ -203,6 +203,15 @@ $(function initEventListeners() {
     
 });
 
+function displayTimerTitleInAlert(timerTitle) {
+
+    if($("#alerts").is(":checked")) {
+        setTimeout(()=>{                        
+            alert(timerTitle);
+        },2000)
+    }
+}
+
 $(function setPoller() {
 
     // Special setInterval is overriden with web worker that can track timer, beep, and announce as a background tab
@@ -217,9 +226,11 @@ $(function setPoller() {
                 if(timer.current>=timer.alarm && (timer.repeatBeep || !timer.elapsed) && timer.alarm!==0) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
                     if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
                         beep();
-                    // } else if(!timer.elapsed) { // alarm with speech will always be only once
+                        displayTimerTitleInAlert(timer.alarmAnnounce);
+                        // } else if(!timer.elapsed) { // alarm with speech will always be only once
                     } else {
                         beepNThenWord(timer.alarmTimes, timer.alarmAnnounce)
+                        displayTimerTitleInAlert(timer.alarmAnnounce);
                     }
                     timer.elapsed = true;
                 }
