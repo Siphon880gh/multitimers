@@ -685,3 +685,10 @@ $(()=>{
         });
     }
 })
+
+$(()=>{
+    let visualAlarmSetting = localStorage.getItem( "multitimers__visual_alarm");
+    if(visualAlarmSetting && visualAlarmSetting==="1") {
+        $("#visual-alarm").attr("checked", true);
+    }
+})

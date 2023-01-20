@@ -179,7 +179,7 @@
         </div> -->
         <div class="form-control">
             <label for="visual-alarm" style="cursor:pointer;">Visual Alarm?</label>
-            <input type="checkbox" id="visual-alarm">
+            <input type="checkbox" id="visual-alarm" onchange='localStorage.setItem( "multitimers__visual_alarm", $(this).is(":checked")?1:0)'>
         </div>
     </div>
 
@@ -187,7 +187,7 @@
     <script src="assets/js/app.js"></script>
 
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker ' in navigator) {
             window.addEventListener("load", () => {
                 navigator.serviceWorker.register("sw.js")
                     .then(console.log)
