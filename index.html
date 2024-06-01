@@ -55,13 +55,15 @@
 </head>
 
 <body>
-    <div>
-        <a href="javascript:void(0)" onclick='toggleMinimalView();' class="fa fa-eye" style="
-                position: fixed;
-                top: 5px;
-                right: 15px;
-                text-decoration: none;
-            "></a>
+    <div style="
+        position: fixed;
+        top: 5px;
+        right: 15px;
+        text-decoration: none;
+    ">
+        <a href="javascript:void(0)" onclick='toggleMinimalView();' style="text-decoration:none;" class="fa fa-eye"></a>
+        <span>&nbsp;&nbsp;</span>
+        <a href="javascript:void(0)" onclick='new Timer();' style="text-decoration:none;" class="fa fa-plus"></a>
     </div>
     <div class="container">
         <div class="clean-mode-toggleable">
