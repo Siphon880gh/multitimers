@@ -211,9 +211,20 @@ $(function initEventListeners() {
 //         },2000)
 //     }
 // }
-function visualAlarm() {
+function visualAlarm(color) {
     if($("#visual-alarm").is(":checked")) {
-        $("body").css("background-color", "red")
+        console.log({color})
+        switch(color) {
+            case "red":
+                $("body").css("background-color", "rgba(255, 0, 0, 1)")
+                break;
+            case "green":
+                $("body").css("background-color", "rgba(0, 255, 0, .3)")
+                break;
+            case "blue":
+                $("body").css("background-color", "rgba(0, 100, 255, .3)")
+                break;
+        }
     }
 }
 $("body").on("click", ()=>{
@@ -235,12 +246,14 @@ $(function setPoller() {
                     if(timer.alarmTimes===1 && timer.alarmAnnounce.length===0) {
                         beep();
                         // displayTimerTitleInAlert(timer.alarmAnnounce);
-                        visualAlarm();
+                        const color = timer.getColor();
+                        visualAlarm(color);
                         // } else if(!timer.elapsed) { // alarm with speech will always be only once
                     } else {
                         beepNThenWord(timer.alarmTimes, timer.alarmAnnounce)
                         // displayTimerTitleInAlert(timer.alarmAnnounce);
-                        visualAlarm();
+                        const color = timer.getColor();
+                        visualAlarm(color);
                     }
                     timer.elapsed = true;
                 }
@@ -281,12 +294,12 @@ $(function setPoller() {
                 let alarmSecs = timer.alarm;
                 if(alarmSecs!==0) {
                     if(totalSecs>=alarmSecs) { // Possibly obsolete concern: must be >= because it'd be missed if under another tab and you just opened the tab
-                        if(!$timer.hasClass("red")) {
-                            $timer.addClass("red");
+                        if(!$timer.hasClass("due")) {
+                            $timer.addClass("due");
                         }
                     } else {
-                        if($timer.hasClass("red")) {
-                            $timer.removeClass("red");
+                        if($timer.hasClass("due")) {
+                            $timer.removeClass("due");
                         }
                     } // if out
                 }
@@ -299,10 +312,27 @@ $(function setPoller() {
  * Timer object gets pushed to timers array
  * Variables current and goal are in seconds.
  */
+function decorators() {
+        return {
+            getTimer: function() {
+            const uid = this.uid;
+            return $(`[data-uid="${uid}"]`);
+        },
+        setColor: function(color) {
+            this.color = color;
+            this.getTimer().attr("data-color", color);
+        },
+        getColor: function(color) {
+            return this.color
+        }
+    }
+}
 class Timer {
     constructor() {
         const uid = Date.now() + "";
-        const timer = {
+        const defaultColor = "red"
+        let timer = {
+            color: defaultColor,
             uid,
             alarm: 0,
             alarmTimes: 1,
@@ -319,10 +349,15 @@ class Timer {
                 evenLabel: ""
             }
         }
+        timer = {...timer, ...decorators()};
 
-        // Update model
+        // Append model to models
         window.timers[0][uid] = timer;
-        new $Timer(uid);
+
+        // Graphical
+        let $timer = new $Timer(uid, defaultColor);
+        
+        // Update localStorage
         window.timers.updatePersist();
     }
 } // class Timer
@@ -331,9 +366,10 @@ class Timer {
  * $Timer is DOM
  */
 class $Timer {
-    constructor(uid) {
+    constructor(uid, color) {
         let template = $("template").html();
         template = template.replaceAll("__uid__", uid);
+        template = template.replaceAll("__color__", color);
         let $timer = $(template);
         utility.$layout.append($timer);
         return $timer;
@@ -508,6 +544,9 @@ function shorthandSetAlarm($alarmSetter) {
 
         // Reflect timer looping on the model
         timer.looping = true;
+        console.log("Will NOT loop back when reach alarm time")
+    } else {
+        console.log("Will loop back when reach alarm time")
     }
 
     line = line.toLowerCase();
@@ -556,8 +595,13 @@ $(function initPersist() {
     var timersExist = JSON.parse(localStorage.getItem("multitimers__timers"));
     if(timersExist) {
         window.timers[0] = timersExist;
+        
         for(uid in timersExist) {
-            const timer = timersExist[uid]
+            let timer = timersExist[uid]  
+            
+            // Since methods dont get saved in localStorage
+            timer = {...timer, ...decorators()};
+            window.timers[0][uid] = timer;
 
             // Countdowns to 0
             timer.elapsed = false;
@@ -566,7 +610,7 @@ $(function initPersist() {
 
             // Restore DOM - Loop Time and Repeat Beep buttons
             const {looping, repeatBeep} = timer;
-            const $timer = new $Timer(uid);
+            const $timer = new $Timer(uid, timer.color);
             
             if(looping) $timer.find(".loop-timer").addClass("active");
             if(repeatBeep) $timer.find(".repeat-beep").addClass("active");

@@ -108,7 +108,7 @@
         <main></main>
 
         <template>
-                <div data-uid="__uid__" class="time-tile timer" data-o data-init>
+                <div data-uid="__uid__" class="time-tile timer" data-o data-init data-color="__color__">
                     <div class="section-header">Timer</div>
                     <div class="timer-title" contenteditable>Title <span class="fa fa-edit"></span></div>
                     <button class="remove-timer" data-role="none" type="button"><span class="fa fa-times"></button>
@@ -155,6 +155,20 @@
                         <button class="loop-timer hoverable fa fa-history" data-role="none" type="button"></button>
                         <button class="repeat-beep hoverable fa fa-bullhorn" data-role="none" type="button"></button>                        
                     </div>
+
+                    <div>
+                        <details style="font-size:90%; color:gray;">
+                            <summary style="text-align:right;">Colors <i class="fa fa-cog" aria-label="Color Settings"></i></summary>
+                            <div class="color-settings">
+                                <label>Red</label>
+                                <input type="radio" value="Red" name="color-__uid__" onclick='window.timers[0][__uid__].setColor("red")'/><br/>
+                                <label>Green</label>
+                                <input type="radio" value="Green" name="color-__uid__" onclick='window.timers[0][__uid__].setColor("green")'/><br/>
+                                <label>Blue</label>
+                                <input type="radio" value="Blue" name="color-__uid__" onclick='window.timers[0][__uid__].setColor("blue")'/>
+                        </details>
+                    </div>
+
                     <hr/>
 
                     <div class="tap-counter-section">

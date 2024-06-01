@@ -1,3 +1,8 @@
+
+::marker {
+    color: transparent;
+
+}
 .loop-timer.active {
     color: green;
 }
@@ -12,6 +17,12 @@
 
 .fa-pause {
     color: red;
+}
+
+.fa-edit {
+    color: gray;
+    font-weight: 450;
+    opacity: 0.7;
 }
 
 #title {
@@ -72,11 +83,17 @@ aside {
     content: ":";
 }
 
-.red {
+.due[data-color="red"] {
     background-color: rgba(255, 0, 0, .7);
 }
+.due[data-color="green"] {
+    background-color: rgba(0, 255, 0, .3);
+}
+.due[data-color="blue"] {
+    background-color: rgba(0, 100, 255, .3);
+}
 
-.time-tile:not(.red) .replay-container {
+.time-tile:not(.due) .replay-container {
     display: none;
 }
 
