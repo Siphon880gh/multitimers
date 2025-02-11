@@ -736,3 +736,25 @@ $(()=>{
         $("#visual-alarm").attr("checked", true);
     }
 })
+
+// Add event listener for updating timer.current when timer time is edited
+$(".timemark-container .hh, .timemark-container .mm, .timemark-container .ss").livequery((i, el) => {
+    $(el).on("blur", (event) => {
+        const uid = utility.getUIDfromEvent(event);
+        const $timer = utility.get$Timer(uid);
+
+        // Get the edited time components
+        const hh = parseInt($timer.find(".timemark-container .hh").text()) || 0;
+        const mm = parseInt($timer.find(".timemark-container .mm").text()) || 0;
+        const ss = parseInt($timer.find(".timemark-container .ss").text()) || 0;
+
+        // Calculate total seconds
+        const totalSecs = (hh * 3600) + (mm * 60) + ss;
+
+        // Update the model time
+        timers[0][uid].current = totalSecs;
+
+        // Persist the updated model
+        timers.updatePersist();
+    });
+});
